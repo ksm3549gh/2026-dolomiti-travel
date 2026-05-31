@@ -464,4 +464,33 @@ amountInput.value = '';
 renderBudgets();
 }
 
-// 인풋창에 데이터 로
+// 인풋창에 데이터 로드하여 수정 상태로 진입시키는 함수
+function editBudget(id) {
+const item = budgetData.find(target => target.id === id);
+if(!item) return;
+
+document.getElementById('budget-edit-id').value = item.id;
+document.getElementById('budget-title').value = item.title;
+document.getElementById('budget-amount').value = item.amount;
+document.getElementById('budget-unit').value = item.unit;
+
+// 버튼 직관적 텍스트로 변경
+document.getElementById('btn-budget-submit').innerText = "지출 내역 수정 완료";
+document.getElementById('budget-title').focus();
+}
+
+function deleteBudget(id) {
+if(confirm("해당 지출 내역을 삭제하시겠습니까?")) {
+budgetData = budgetData.filter(item => item.id !== id);
+renderBudgets();
+}
+}
+
+// 웹뷰 로드 완료 시 초기 인터페이스 바인딩
+window.onload = function() {
+renderChecklist();
+renderBudgets();
+}
+</script>
+</body>
+</html>
