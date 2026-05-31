@@ -1,960 +1,449 @@
-```html
 <!DOCTYPE html>
-<html lang="ko" class="h-full">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dolomiti Travel Planner</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-    <!-- Leaflet JS for Interactive Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dolomite: {
-                            50: '#f4f7f5',
-                            100: '#e5ebe6',
-                            200: '#cbdad0',
-                            300: '#a3beb1',
-                            400: '#759a89',
-                            500: '#537d6b',
-                            600: '#406253',
-                            700: '#355045',
-                            800: '#2c4139',
-                            900: '#263730',
-                            950: '#131e1a',
-                        },
-                        ambergold: {
-                            50: '#fdfbeb',
-                            100: '#fbf5c7',
-                            200: '#f7e78d',
-                            300: '#f2d14b',
-                            400: '#ecba1f',
-                            500: '#d79e12',
-                            600: '#ba7a0d',
-                            700: '#96590e',
-                            800: '#7c4611',
-                            900: '#673912',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Noto Sans KR', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        /* Map custom styling */
-        #map {
-            height: 220px;
-            border-radius: 12px;
-            z-index: 10;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dolomiti Travel Guide 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+body { font-family: 'Noto Sans KR', sans-serif; -webkit-tap-highlight-color: transparent; }
+.active-tab { color: #0284c7; border-top: 3px solid #0284c7; }
+</style>
 </head>
-<body class="bg-slate-900 text-slate-100 h-full flex flex-col overflow-hidden">
-
-    <!-- Top Status Bar / Header -->
-    <header class="bg-dolomite-950/90 backdrop-blur-md border-b border-dolomite-800 px-4 py-3 flex items-center justify-between shrink-0 sticky top-0 z-50">
-        <div class="flex items-center space-x-2">
-            <span class="text-ambergold-400 text-xl"><i class="fa-solid fa-mountain-sun"></i></span>
-            <div>
-                <h1 class="text-sm font-bold tracking-tight text-white font-serif">DOLOMITI 2026</h1>
-                <p class="text-[10px] text-dolomite-300">7.11 (토) - 7.22 (수) | 2인 자유여행</p>
-            </div>
-        </div>
-        <div class="flex items-center space-x-2">
-            <span class="bg-dolomite-800 text-[10px] text-ambergold-400 font-bold px-2 py-1 rounded-full border border-dolomite-700">
-                1 EUR = 1,750원
-            </span>
-        </div>
-    </header>
-
-    <!-- Main Content Area with Dynamic Pages -->
-    <main class="flex-1 overflow-y-auto hide-scrollbar pb-24">
-        
-        <!-- PAGE 1: ITINERARY (여행 계획) -->
-        <section id="page-itinerary" class="page-content px-4 py-4 space-y-4">
-            
-            <!-- Quick Date Selector Menu (Horizontal Scrollable) -->
-            <div class="flex space-x-2 overflow-x-auto hide-scrollbar py-1 shrink-0 -mx-4 px-4">
-                <!-- Days will be dynamically generated or active styled -->
-                <button onclick="selectDay(1)" id="daybtn-1" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-800 text-white border border-dolomite-700 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 1</div>
-                    <div class="text-xs font-bold">7.11 토</div>
-                </button>
-                <button onclick="selectDay(2)" id="daybtn-2" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 2</div>
-                    <div class="text-xs font-bold">7.12 일</div>
-                </button>
-                <button onclick="selectDay(3)" id="daybtn-3" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 3</div>
-                    <div class="text-xs font-bold">7.13 월</div>
-                </button>
-                <button onclick="selectDay(4)" id="daybtn-4" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 4</div>
-                    <div class="text-xs font-bold">7.14 화</div>
-                </button>
-                <button onclick="selectDay(5)" id="daybtn-5" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 5</div>
-                    <div class="text-xs font-bold">7.15 수</div>
-                </button>
-                <button onclick="selectDay(6)" id="daybtn-6" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 6</div>
-                    <div class="text-xs font-bold">7.16 목</div>
-                </button>
-                <button onclick="selectDay(7)" id="daybtn-7" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 7</div>
-                    <div class="text-xs font-bold">7.17 금</div>
-                </button>
-                <button onclick="selectDay(8)" id="daybtn-8" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 8</div>
-                    <div class="text-xs font-bold">7.18 토</div>
-                </button>
-                <button onclick="selectDay(9)" id="daybtn-9" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 9</div>
-                    <div class="text-xs font-bold">7.19 일</div>
-                </button>
-                <button onclick="selectDay(10)" id="daybtn-10" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 10</div>
-                    <div class="text-xs font-bold">7.20 월</div>
-                </button>
-                <button onclick="selectDay(11)" id="daybtn-11" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 11</div>
-                    <div class="text-xs font-bold">7.21 화</div>
-                </button>
-                <button onclick="selectDay(12)" id="daybtn-12" class="day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-950 text-slate-400 min-w-[56px]">
-                    <div class="text-[10px] opacity-65">Day 12</div>
-                    <div class="text-xs font-bold">7.22 수</div>
-                </button>
-            </div>
-
-            <!-- Interactive Leaflet Map for Current Day -->
-            <div class="bg-slate-800/80 border border-slate-700/50 p-3 rounded-2xl shadow-xl space-y-2">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-semibold text-dolomite-300 flex items-center gap-1">
-                        <i class="fa-solid fa-map-location-dot text-ambergold-500"></i> 오늘의 동선 지도 시각화
-                    </span>
-                    <span id="map-day-indicator" class="text-[10px] bg-slate-900 px-2 py-0.5 rounded-full text-slate-400 font-bold">Day 1: 밀라노 입국</span>
-                </div>
-                <div id="map"></div>
-                <p class="text-[10px] text-slate-400 text-center italic">* 지도를 드래그하거나 핀을 탭하면 장소 정보를 볼 수 있습니다.</p>
-            </div>
-
-            <!-- Day Header & External Links Box -->
-            <div id="day-header" class="bg-gradient-to-r from-dolomite-900 to-slate-800 border border-dolomite-800 p-4 rounded-2xl shadow-lg">
-                <!-- Dynamically loaded -->
-            </div>
-
-            <!-- Timeline / Stop-by Points list -->
-            <div class="space-y-3">
-                <h3 class="text-xs font-bold text-slate-400 px-1 uppercase tracking-wider">상세 이동 타임라인</h3>
-                <div id="timeline-container" class="relative border-l-2 border-dolomite-700 ml-3.5 pl-5 space-y-5">
-                    <!-- Dynamic timeline cards will go here -->
-                </div>
-            </div>
-
-        </section>
-
-        <!-- PAGE 2: CHECKLIST (체크리스트) -->
-        <section id="page-checklist" class="page-content px-4 py-4 space-y-4 hidden">
-            <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-2xl shadow-lg">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-list text-ambergold-400"></i> 돌로미티 준비 체크리스트
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">이탈리아 산악 여행을 위한 필수 물품 및 준비 상태를 관리하세요.</p>
-                
-                <!-- Progress bar -->
-                <div class="mt-4 bg-slate-700 h-2.5 w-full rounded-full overflow-hidden">
-                    <div id="checklist-progress" class="bg-ambergold-500 h-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <div class="flex justify-between items-center text-[11px] text-slate-400 mt-1.5 font-bold">
-                    <span id="checklist-count-text">0 / 0 완료</span>
-                    <span id="checklist-percent-text">0%</span>
-                </div>
-            </div>
-
-            <!-- Quick Add Item Form -->
-            <form onsubmit="addChecklistItem(event)" class="flex gap-2">
-                <input type="text" id="new-item-text" placeholder="새로운 준비물 입력..." required 
-                    class="flex-1 bg-slate-800 border border-slate-700 px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-ambergold-500 text-white placeholder-slate-500">
-                <button type="submit" class="bg-ambergold-500 hover:bg-ambergold-600 text-slate-950 font-bold px-4 rounded-xl text-sm transition-all flex items-center justify-center">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </form>
-
-            <!-- Categorized Lists -->
-            <div class="space-y-3" id="checklist-items">
-                <!-- Dynamically loaded checklist cards -->
-            </div>
-        </section>
-
-        <!-- PAGE 3: BUDGET (예산 및 경비) -->
-        <section id="page-budget" class="page-content px-4 py-4 space-y-4 hidden">
-            <!-- Budget Overview Card -->
-            <div class="bg-gradient-to-br from-dolomite-900 to-slate-900 border border-dolomite-800 p-5 rounded-2xl shadow-xl space-y-4">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-wallet text-ambergold-400"></i> 실시간 여행 경비 정산
-                </h2>
-                
-                <div class="grid grid-cols-2 gap-4 pt-2">
-                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
-                        <span class="text-[10px] text-slate-400 block font-medium">총 유로 지출액</span>
-                        <span id="total-eur-display" class="text-lg font-extrabold text-ambergold-400">€0.00</span>
-                    </div>
-                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
-                        <span class="text-[10px] text-slate-400 block font-medium">원화 환산 합계 (1,750원)</span>
-                        <span id="total-krw-display" class="text-lg font-extrabold text-emerald-400">₩0</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action: Add Expense Form -->
-            <div class="bg-slate-800/90 border border-slate-700 p-4 rounded-2xl shadow-lg space-y-3">
-                <div class="text-xs font-bold text-white uppercase tracking-wider flex items-center justify-between">
-                    <span>지출 항목 추가</span>
-                    <span class="text-[10px] text-ambergold-400 font-normal">유로/원화 선택 가능</span>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-[10px] text-slate-400 mb-1">지출 명칭</label>
-                        <input type="text" id="expense-name" placeholder="예: 케이블카 티켓" 
-                            class="w-full bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-ambergold-500">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-slate-400 mb-1 font-semibold">카테고리</label>
-                        <select id="expense-category" class="w-full bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-xs text-white focus:outline-none">
-                            <option value="교통/케이블카">교통 / 케이블카</option>
-                            <option value="식비/산장">식비 / 산장 카페</option>
-                            <option value="숙박">숙박 시설</option>
-                            <option value="기타">쇼핑 및 기타</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="col-span-2">
-                        <label class="block text-[10px] text-slate-400 mb-1">금액</label>
-                        <input type="number" id="expense-amount" placeholder="금액 입력" step="any"
-                            class="w-full bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-ambergold-500">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-slate-400 mb-1">통화 단위</label>
-                        <select id="expense-currency" class="w-full bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-xs text-ambergold-400 font-bold focus:outline-none">
-                            <option value="EUR">EUR (€)</option>
-                            <option value="KRW">KRW (₩)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button onclick="addExpense()" class="w-full bg-ambergold-500 hover:bg-ambergold-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1">
-                    <i class="fa-solid fa-plus"></i> 경비 추가하기
-                </button>
-            </div>
-
-            <!-- Expense List -->
-            <div class="space-y-2">
-                <h3 class="text-xs font-bold text-slate-400 px-1 uppercase tracking-wider">상세 지출 내역</h3>
-                <div class="space-y-2" id="expense-items-list">
-                    <!-- Dynamically populated -->
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Bottom Navigation Bar -->
-    <nav class="bg-dolomite-950/95 border-t border-dolomite-800 py-2 px-6 flex justify-around items-center shrink-0 fixed bottom-0 left-0 right-0 z-50">
-        <button onclick="navigate('itinerary')" id="nav-itinerary" class="nav-btn flex flex-col items-center space-y-1 text-ambergold-500 transition-all">
-            <span class="text-xl"><i class="fa-solid fa-route"></i></span>
-            <span class="text-[10px] font-bold">여행 계획</span>
-        </button>
-        <button onclick="navigate('checklist')" id="nav-checklist" class="nav-btn flex flex-col items-center space-y-1 text-slate-500 transition-all">
-            <span class="text-xl"><i class="fa-solid fa-list-check"></i></span>
-            <span class="text-[10px] font-bold">체크리스트</span>
-        </button>
-        <button onclick="navigate('budget')" id="nav-budget" class="nav-btn flex flex-col items-center space-y-1 text-slate-500 transition-all">
-            <span class="text-xl"><i class="fa-solid fa-wallet"></i></span>
-            <span class="text-[10px] font-bold">예산/경비</span>
-        </button>
-    </nav>
-
-    <!-- Map & Itinerary Data Script -->
-    <script>
-        // Exchange rate factor
-        const EUR_TO_KRW = 1750;
-
-        // Leaflet Map instance
-        let map;
-        let markersGroup;
-        let currentDayIdx = 1;
-
-        // DB / State Data
-        const ITINERARY_DATA = {
-            1: {
-                dateStr: "7.11 토",
-                title: "밀라노 도착 및 체크인",
-                hotel: "쉐라톤 밀란 말펜사 에어포트 호텔 (MXP Terminal 1 연결)",
-                hotelAddress: "Sheraton Milan Malpensa, Ferno VA, Italy",
-                lunch: "인천공항 내 다이닝 라운지 또는 기내식",
-                gmapsLink: "https://www.google.com/maps/dir/Incheon+International+Airport,+Incheon/Milan+Malpensa+Airport,+Ferno,+Province+of+Varese,+Italy",
-                liftsLink: "",
-                stops: [
-                    { time: "11:40", name: "인천공항 제2터미널 출발 (AF0267편)", desc: "2명 탑승 예정. 게이트 확인 및 면세품 수령을 위해 출발 3시간 전 공항 도착 필수" },
-                    { time: "18:40", name: "파리 샤를드골 공항(CDG) 2E 터미널 도착", desc: "환승 시간 2시간 50분 확보. 터미널 2E에서 2F로 도보/셔틀 이동" },
-                    { time: "21:30", name: "파리 샤를드골 공항(CDG) 2F 터미널 출발", desc: "AF1130편 탑승 후 이탈리아 밀라노로 출발" },
-                    { time: "23:00", name: "밀라노 말펜사 공항(MXP) 도착", desc: "도착 수하물 수령 후 입국장 연결 통로로 이동" },
-                    { time: "23:30", name: "쉐라톤 밀란 말펜사 호텔 체크인", desc: "공항 내 위치하여 최상의 동선 및 컨디션 확보 가능" }
-                ],
-                coords: [
-                    { name: "밀라노 말펜사 공항", lat: 45.6301, lng: 8.7230 },
-                    { name: "쉐라톤 밀란 말펜사 호텔", lat: 45.6288, lng: 8.7135 }
-                ]
-            },
-            2: {
-                dateStr: "7.12 일",
-                title: "밀라노에서 돌로미티 브레사노네로 이동",
-                hotel: "Santre Dolomitic Home (산트레 돌로미틱 홈)",
-                hotelAddress: "Santre Dolomitic Home, Bressanone, BZ, Italy",
-                lunch: "휴게소 Paganella Est 또는 브레사노네 구시가지 파스타",
-                gmapsLink: "https://www.google.com/maps/dir/Milan+Malpensa+Airport,+Ferno,+Province+of+Varese,+Italy/Area+di+Servizio+Paganella+Est,+A22+Autostrada+del+Brennero,+Lavis+TN/Bressanone/Santre+dolomitic+home,+Via+Meluno,+Bressanone,+Province+of+Bolzano+-+South+Tyrol,+Italy",
-                liftsLink: "",
-                stops: [
-                    { time: "11:00", name: "밀라노 말펜사 공항 렌트카 픽업", desc: "공항 내 예약된 렌트카 카운터에서 패키지 수속 완료 후 픽업" },
-                    { time: "11:30", name: "밀라노 출발 -> 돌로미티 이동 시작", desc: "최단거리 고속도로 경로 (A4 및 A22 고속도로 이용)" },
-                    { time: "14:30", name: "Area di Servizio Paganella Est 휴게소 정차", desc: "주행 중간 지점 피로 회복, 간단한 주유, 에스프레소 및 크루아상 시식" },
-                    { time: "16:00", name: "브레사노네(Bressanone) 도착 및 시내 투어", desc: "브레사노네 시내 최적 주차장: **Parcheggio Priel (Via Brennero)** 이용 추천 (넓고 시내 중심지 도보 5분)" },
-                    { time: "18:00", name: "Santre Dolomitic Home 호텔 체크인", desc: "환상적인 뷰를 품은 최고급 산장 호텔. 휴식 및 석식 즐기기" }
-                ],
-                coords: [
-                    { name: "밀라노 말펜사 공항 렌트카", lat: 45.6301, lng: 8.7230 },
-                    { name: "Paganella Est 휴게소", lat: 46.1365, lng: 11.1097 },
-                    { name: "브레사노네 Priel 주차장", lat: 46.7214, lng: 11.6575 },
-                    { name: "Santre Dolomitic Home", lat: 46.7288, lng: 11.6811 }
-                ]
-            },
-            3: {
-                dateStr: "7.13 월",
-                title: "세체다 하이킹 및 몬테파나-치암피노이 트레킹",
-                hotel: "Santre Dolomitic Home (산트레 돌로미틱 홈)",
-                hotelAddress: "Santre Dolomitic Home, Bressanone, BZ, Italy",
-                lunch: "Baita Sofie Hütte (세체다 정상 근처 전망 맛집 산장)",
-                gmapsLink: "https://www.google.com/maps/dir/Santre+dolomitic+home,+Via+Meluno,+Bressanone,+Province+of+Bolzano+-+South+Tyrol,+Italy/Streda+Raiser,+61,+39048+Santa+Cristina+Valgardena+BZ/Streda+Pana,+5,+39047+Santa+Cristina+Valgardena+BZ/Selva+di+Val+Gardena/Santre+dolomitic+home",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm",
-                stops: [
-                    { time: "08:00", name: "숙소 출발", desc: "렌트카로 Santa Cristina Valgardena 이동" },
-                    { time: "08:45", name: "14번 콜레이저 리프트 탑승", desc: "Streda Raiser 61 주차. 리프트 타고 세체다(Seceda)로 이동하여 웅장한 칼날 산맥 조망" },
-                    { time: "12:00", name: "콜레이저로 하행 및 차량 회수", desc: "아름다운 목초지를 걸어서 또는 리프트로 주차장 복귀" },
-                    { time: "13:00", name: "몬테파나 주차장 주차 및 이동", desc: "Streda Pana 5 주차. Seggiovia를 타고 몬 데 세우라(Mont de Seura) 정류장 이동" },
-                    { time: "14:00", name: "526A 트레킹 코스 -> 치암피노이", desc: "사쏘룽고의 압도적인 암벽을 옆에 두고 걷는 하이라이트 코스" },
-                    { time: "16:00", name: "29번 곤돌라 타고 Selva 마을 하행", desc: "셀바 디 발 가르데나 하역장 도착" },
-                    { time: "16:30", name: "S.da Nives 288 정류장 버스 탑승", desc: "350, 358, 360번 버스를 탑승하여 몬테파나 주차장으로 복귀 후 렌트카로 숙소 이동" }
-                ],
-                coords: [
-                    { name: "Santre Dolomitic Home", lat: 46.7288, lng: 11.6811 },
-                    { name: "콜레이저 리프트 주차장", lat: 46.5684, lng: 11.7241 },
-                    { name: "몬테파나 주차장", lat: 46.5518, lng: 11.7188 },
-                    { name: "치암피노이 곤돌라", lat: 46.5528, lng: 11.7554 },
-                    { name: "셀바 버스 정류장", lat: 46.5559, lng: 11.7589 }
-                ]
-            },
-            4: {
-                dateStr: "7.14 화",
-                title: "알페 디 시우시 야생화 언덕 트레킹 & 숙소 이동",
-                hotel: "DOLOMITI Exclusive Your Mountain Suite (체크인)",
-                hotelAddress: "Pozza di Fassa, Province of Trento, Italy",
-                lunch: "Rauch Hütte (알페디시우시 뷰와 파스타가 유명한 전통 산장)",
-                gmapsLink: "https://www.google.com/maps/dir/Santre+dolomitic+home/Via+Setil,+9,+Ortisei,+BZ/Compatsch,+Castelrotto+BZ/Dolomiti+Exclusive+Your+Mountain+Suite,+Pozza+di+Fassa,+TN",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/summer/seiser-alm",
-                stops: [
-                    { time: "09:00", name: "체크아웃 후 오르티세이 출발", desc: "짐을 모두 실은 채 오르티세이 1번 곤돌라 주차장으로 이동" },
-                    { time: "10:00", name: "1번 곤돌라 주차장 주차 및 탑승", desc: "Via Setil 9 주차. 곤돌라를 타고 유럽 최대의 고원 목초지 알페 디 시우시 안착" },
-                    { time: "10:30", name: "59번 Al Sole 리프트 하행 -> 스포츠호텔", desc: "리프트 탑승 후 드넓은 평원의 중심부인 스포츠호텔 도착" },
-                    { time: "11:00", name: "살트리아 방향 워킹 -> 65번 Florian 리프트", desc: "플로리안 리프트 탑승 후 윌리엄스 산장(Williamshütte)으로 이동" },
-                    { time: "12:30", name: "티레스 산장(Tierser Alpl) 하이킹", desc: "붉은 지붕의 매력적인 티레스 산장까지 웅장한 알프스 전망을 따라 도보 이동" },
-                    { time: "15:00", name: "알펜호텔 파노라마 이동 및 체어리프트 탑승", desc: "파노라마 휠 타고 콤파치(Compatsch) 마을 버스정류장으로 이동" },
-                    { time: "16:30", name: "179번 & 172번 버스 환승하여 오르티세이 귀환", desc: "주차된 렌트카 회수하여 포차 디 파사로 이동" },
-                    { time: "18:00", name: "DOLOMITI Exclusive Your Mountain Suite 체크인", desc: "앞으로 8일간 묵을 프리미엄 베이스캠프 안착" }
-                ],
-                coords: [
-                    { name: "오르티세이 1번 주차장", lat: 46.5744, lng: 11.6706 },
-                    { name: "스포츠호텔 (Alpe di Siusi)", lat: 46.5414, lng: 11.6601 },
-                    { name: "Florian 리프트 (Saltria)", lat: 46.5165, lng: 11.6826 },
-                    { name: "티레스 산장 (Tierser Alpl)", lat: 46.4912, lng: 11.6492 },
-                    { name: "DOLOMITI Exclusive Suite", lat: 46.4295, lng: 11.6881 }
-                ]
-            },
-            5: {
-                dateStr: "7.15 수",
-                title: "카티나치오 가르데치아-바욜렛 산장 정복",
-                hotel: "DOLOMITI Exclusive Your Mountain Suite (연박)",
-                hotelAddress: "Pozza di Fassa, Province of Trento, Italy",
-                lunch: "Rifugio Gardeccia 또는 Rifugio Vajolet (정통 티롤 음식)",
-                gmapsLink: "https://www.google.com/maps/dir/Dolomiti+Exclusive+Your+Mountain+Suite/Str.+de+Col+de+M%C3%A8,+10,+38036+Sen+Jan+di+Fassa+TN/Pera+di+Fassa/Dolomiti+Exclusive+Your+Mountain+Suite",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm",
-                stops: [
-                    { time: "09:00", name: "숙소 출발 -> 비고 디 파사(Vigo di Fassa) 이동", desc: "Vigo di Fassa 주차장으로 이동" },
-                    { time: "09:30", name: "211번 Catenaccio Funivie 탑승", desc: "웅장한 고원을 지나는 리프트를 타고 참페디에 산장(Ciampedie)으로 이동" },
-                    { time: "10:30", name: "참페디에 -> 가르데치아 산장 도보 트레킹", desc: "피아노길처럼 완만하고 아름다운 숲길 하이킹 (아이들과 가기에도 좋은 난이도)" },
-                    { time: "11:30", name: "가르데치아 -> 바욜렛 산장(Rifugio Vajolet) 본격 트레킹", desc: "기암괴석 아래로 이어지는 돌로미티 특유의 야생적이고 멋진 루트" },
-                    { time: "14:30", name: "역방향 하이킹 -> Pera 마을 주차장 하행", desc: "리프트 연계를 통해 Pera 마을 주차장으로 안전하게 하행" },
-                    { time: "16:30", name: "Pera 마을 차량 회수 및 숙소 복귀", desc: "숙소 도착 후 편안한 휴식 및 개인 정비" }
-                ],
-                coords: [
-                    { name: "Vigo di Fassa 리프트", lat: 46.4173, lng: 11.6705 },
-                    { name: "참페디에 산장", lat: 46.4244, lng: 11.6402 },
-                    { name: "가르데치아 산장", lat: 46.4444, lng: 11.6385 },
-                    { name: "바욜렛 산장", lat: 46.4608, lng: 11.6111 },
-                    { name: "Pera di Fassa 주차장", lat: 46.4365, lng: 11.6912 }
-                ]
-            },
-            6: {
-                dateStr: "7.16 목",
-                title: "카레짜 호수와 쾨니그 라우린 & 프리드리히 아우구스트 길",
-                hotel: "DOLOMITI Exclusive Your Mountain Suite (연박)",
-                hotelAddress: "Pozza di Fassa, Province of Trento, Italy",
-                lunch: "Rifugio Paolina Hütte (카레짜 전망) 또는 Friedrich August 산장 (도넛 강추)",
-                gmapsLink: "https://www.google.com/maps/dir/Dolomiti+Exclusive+Your+Mountain+Suite/Lago+di+Carezza/Seggiovia+Paolina/Campitello+di+Fassa/Dolomiti+Exclusive+Your+Mountain+Suite",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/summer/carezza",
-                stops: [
-                    { time: "09:00", name: "Carezza 호수 주차장 도착 및 에메랄드빛 호수 조망", desc: "거울같이 맑은 호수 표면에 로젠가르덴 산맥이 반영되는 절경 감상" },
-                    { time: "10:15", name: "Seggiovia Paolina 리프트 주차장으로 이동 후 탑승", desc: "파올리나 리프트를 타고 올라가 파올리나 산장(Paolina Hütte) 도착" },
-                    { time: "11:00", name: "549번 하이킹 -> 그리스토마노스 독수리 동상", desc: "바위 장벽 아래로 탁 트인 남부 돌로미티 평원을 보며 걷는 매력적인 코스" },
-                    { time: "12:00", name: "545번 길 연계 -> VAEL 산장 도착", desc: "아름다운 라테마르 암벽 감상 후 차로 귀환하기 위해 왔던 길 백트래킹" },
-                    { time: "13:30", name: "Campitello di Fassa로 이동하여 152번 케이블카 탑승", desc: "Col Rodella로 올라가 가르데나 패스를 360도로 한눈에 조망" },
-                    { time: "14:30", name: "프리드리히 아우구스트 산장 '크라펜' & 커피 타임", desc: "도토리 모양을 한 유명 크라펜 도넛 시식 포토존('The Yak Place')에서 사진 촬영" },
-                    { time: "15:30", name: "산드로 페르티니 산장 -> 사쏘 피아토 산장 왕복 코스", desc: "우측에 거대한 사쏘룽고 암벽군을 두고 가벼운 발걸음으로 트레킹 후 숙소 복귀" }
-                ],
-                coords: [
-                    { name: "카레짜 호수", lat: 46.4093, lng: 11.5752 },
-                    { name: "파올리나 리프트 주차장", lat: 46.4111, lng: 11.5878 },
-                    { name: "그리스토마노스 독수리 동상", lat: 46.4011, lng: 11.6012 },
-                    { name: "Campitello di Fassa 152번", lat: 46.4764, lng: 11.7388 },
-                    { name: "프리드리히 아우구스트 산장", lat: 46.4952, lng: 11.7511 }
-                ]
-            },
-            7: {
-                dateStr: "7.17 금",
-                title: "사쏘 포르도이 전망대 & 관짝 케이블카 & QC 떼르메 스파",
-                hotel: "DOLOMITI Exclusive Your Mountain Suite (연박)",
-                hotelAddress: "Pozza di Fassa, Province of Trento, Italy",
-                lunch: "Rifugio Maria (사쏘포르도이 정상에 위치한 뷰 맛집)",
-                gmapsLink: "https://www.google.com/maps/dir/Dolomiti+Exclusive+Your+Mountain+Suite/Passo+Pordoi/Passo+Sella/QC+Terme+Dolomiti,+Pozza+di+Fassa,+TN/Dolomiti+Exclusive+Your+Mountain+Suite",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/val-di-fassa-carezza",
-                stops: [
-                    { time: "09:00", name: "Passo Pordoi 주차장 도착", desc: "해발 2,239m 패스 푸르도이에 주차 후 103번 대형 케이블카 탑승" },
-                    { time: "09:40", name: "사쏘 포르도이 '돌로미티의 테라스' 만끽", desc: "마치 달 표면에 온 듯 척박하고 거대한 바위 고원. 피츠 포에 방향으로 가벼운 하이킹" },
-                    { time: "12:00", name: "사쏘룽고(Passo Sella) 주차장 이동", desc: "'In Sella' 카페에서 환상적인 뷰와 함께 풍미 가득한 이탈리안 에스프레소 브레이크" },
-                    { time: "13:00", name: "스탠딩 2인 '관짝 케이블카' 탑승", desc: "독특한 서서 타는 복고풍 리프트를 타고 Rifugio Toni Demetz Hütte 도착하여 기암괴석 감상" },
-                    { time: "15:30", name: "숙소 복귀 및 휴식", desc: "스파 가기 전 체력 보충을 위해 호텔에서 여유를 만끽" },
-                    { time: "18:00", name: "QC Terme Dolomiti 온천 스파", desc: "여행 중반부의 피로를 사르르 녹여줄 노천 풀스파 및 웰빙 테라피 체험 (사전 예약 추천)" }
-                ],
-                coords: [
-                    { name: "Passo Pordoi 주차장", lat: 46.4883, lng: 11.7879 },
-                    { name: "사쏘 포르도이 전망대", lat: 46.5005, lng: 11.7899 },
-                    { name: "Passo Sella 주차장", lat: 46.5088, lng: 11.7578 },
-                    { name: "Toni Demetz 산장", lat: 46.5135, lng: 11.7521 },
-                    { name: "QC Terme Dolomiti 온천", lat: 46.4312, lng: 11.6922 }
-                ]
-            },
-            8: {
-                dateStr: "7.18 토",
-                title: "마르몰라다 만년설 빙하 조망 & 벨베데레-비엘달판 길",
-                hotel: "DOLOMITI Exclusive Your Mountain Suite (연박)",
-                hotelAddress: "Pozza di Fassa, Province of Trento, Italy",
-                lunch: "Rifugio Viel dal Pan (마르몰라다 빙하가 바로 앞에 펼쳐지는 최고의 전망)",
-                gmapsLink: "https://www.google.com/maps/dir/Dolomiti+Exclusive+Your+Mountain+Suite/Malga+Ciapela/Alba,+Penia/Dolomiti+Exclusive+Your+Mountain+Suite",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/arabba-marmolada",
-                stops: [
-                    { time: "09:00", name: "Malga Ciapela 마르몰라다 케이블카 주차장 도착", desc: "돌로미티의 여왕(최고봉 3,343m)을 향해 3단 대형 케이블카 릴레이 탑승" },
-                    { time: "10:00", name: "세라우타(Serauta) 전쟁박물관 관람 및 푼타 로카 전망대", desc: "제1차 세계대전당시 이탈리아-오스트리아 전선 유적지 관람 후 최고전망대의 만년설 빙하 만끽" },
-                    { time: "12:30", name: "Alba 마을 이동 및 Doleda 케이블카 탑승", desc: "Parcheggio Funivia Doleda 주차 후 130번 케이블카로 콜 데 로시(Col dei Rossi) 안착" },
-                    { time: "13:30", name: "비엘달판(Viel del Pan) 601 트레일 하이킹", desc: "마르몰라다 빙하를 정면으로 마주하고 걷는 명품 평탄 능선 트레일. 비엘달판 산장까지 왕복" },
-                    { time: "16:30", name: "역순으로 Alba 마을 복귀 후 숙소 귀환", desc: "감동적인 대자연의 풍경을 되새기며 따뜻한 저녁 식사 준비" }
-                ],
-                coords: [
-                    { name: "Malga Ciapela 주차장", lat: 46.4278, lng: 11.9103 },
-                    { name: "마르몰라다 최고전망대", lat: 46.4272, lng: 11.8711 },
-                    { name: "Alba Doleda 주차장", lat: 46.4578, lng: 11.7852 },
-                    { name: "콜 데 로시", lat: 46.4695, lng: 11.7925 },
-                    { name: "비엘달판 산장", lat: 46.4788, lng: 11.8211 }
-                ]
-            },
-            9: {
-                dateStr: "7.19 일",
-                title: "알타 바디아의 비밀 정원 Piz Arlara & 라 크루스크 예비 코스",
-                hotel: "DOLOMITI Exclusive Your Mountain Suite (연박)",
-                hotelAddress: "Pozza di Fassa, Province of Trento, Italy",
-                lunch: "Rifugio Bioch (알타바디아 정원을 수놓은 환상적인 파스타 맛집)",
-                gmapsLink: "https://www.google.com/maps/dir/Dolomiti+Exclusive+Your+Mountain+Suite/Umlaufbahn+Col+Alt,+Strada+Col+Alt,+Corvara+in+Badia,+Province+of+Bolzano+-+South+Tyrol/Rifugio+Pralongi%C3%A0/Badia/Dolomiti+Exclusive+Your+Mountain+Suite",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/alta-badia",
-                stops: [
-                    { time: "09:00", name: "코르바라(Corvara) 이동 및 Col Alt 주차장 주차", desc: "1번 COL ALTO 곤돌라를 타고 푸르른 고원 언덕으로 쾌속 이동" },
-                    { time: "10:00", name: "23B/23번 야생화 트레일 힐링 하이킹", desc: "완만한 목초지를 따라 걷기. 피츠 아를라라(Piz Arlara) 산장 거쳐 Bioch 산장으로 이동" },
-                    { time: "12:00", name: "프랄롱지아(Pralongia) 산장 트레킹", desc: "알타 바디아 최고의 파노라믹 뷰포인트. 드넓은 초원 속에서 마음껏 힐링 후 코르바라 백트래킹" },
-                    { time: "14:30", name: "예비 일정: Badia 마을 이동 및 La Crusc 리프트", desc: "61번 리프트 탑승 후 가파른 바위 장벽 아래 위치한 평화로운 아르멘타로 초원 가볍게 산책" },
-                    { time: "17:00", name: "차량 회수 및 포차 디 파사 숙소 귀환", desc: "여유로운 저녁 시간과 맥주 한 잔의 힐링" }
-                ],
-                coords: [
-                    { name: "Corvara Col Alt 주차장", lat: 46.5492, lng: 11.8722 },
-                    { name: "피츠 아를라라 산장", lat: 46.5365, lng: 11.8845 },
-                    { name: "프랄롱지아 산장", lat: 46.5188, lng: 11.9056 },
-                    { name: "Badia 라 크루스크 리프트", lat: 46.6085, lng: 11.8978 }
-                ]
-            },
-            10: {
-                dateStr: "7.20 월",
-                title: "라시에사 요정마을 고원 기차 & 단터체피에스 가르데나 패스 조망",
-                hotel: "DOLOMITI Exclusive Your Mountain Suite (마지막 연박)",
-                hotelAddress: "Pozza di Fassa, Province of Trento, Italy",
-                lunch: "Rifugio Resciesa (라시에사 정상에 위치하여 뛰어난 전망과 수제 수프)",
-                gmapsLink: "https://www.google.com/maps/dir/Dolomiti+Exclusive+Your+Mountain+Suite/S.da+Val+d'Anna,+2,+39046+Ortisei+BZ/Dantercepies+Cable+Car,+Selva+di+Val+Gardena,+BZ/Dolomiti+Exclusive+Your+Mountain+Suite",
-                liftsLink: "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm",
-                stops: [
-                    { time: "08:00", name: "오르티세이 세체다 주차장 도착 및 주차", desc: "S.da Val d'Anna 2 주차 후 라시에사 푸니쿨라레 탑승동까지 도보 이동" },
-                    { time: "09:00", name: "라시에사 푸니쿨라레 탑승 및 산책", desc: "가파른 레일을 올라 정상 도착. 라시에사 산장 및 산타 크로체 예배당(Cappella)을 지나는 루프 코스" },
-                    { time: "12:00", name: "푸니쿨라레 하행 및 세체다 주차장 차량 회수", desc: "이후 셀바 마을 Dantercepies 주차장으로 신속히 이동" },
-                    { time: "13:30", name: "Dantercepies 케이블카 탑승", desc: "Streda Dantercëpies 42 탑승하여 정상 정류장(Bergstation) 도착" },
-                    { time: "14:15", name: "가르데나 패스 & 피츠 보에 파노라마 감상", desc: "우뚝 솟은 루티아 암벽군과 광활한 가르데나 패스를 내려다보는 천상의 포토존" },
-                    { time: "16:00", name: "역방향 하행 및 셀바 올드타운 마을 투어", desc: "아기자기한 목공예 숍과 성당이 있는 셀바 마을을 구경한 뒤 숙소 귀환" }
-                ],
-                coords: [
-                    { name: "오르티세이 세체다 주차장", lat: 46.5755, lng: 11.6722 },
-                    { name: "라시에사 탑승동", lat: 46.5772, lng: 11.6745 },
-                    { name: "산타 크로체 예배당", lat: 46.5925, lng: 11.6611 },
-                    { name: "단터체피에스 주차장", lat: 46.5544, lng: 11.7701 },
-                    { name: "가르데나 패스 조망지", lat: 46.5512, lng: 11.7985 }
-                ]
-            },
-            11: {
-                dateStr: "7.21 화",
-                title: "볼차노 구시가지 탐방 및 밀라노 이동 (렌트카 반납)",
-                hotel: "쉐라톤 밀란 말펜사 에어포트 호텔 & 컨퍼런스센터",
-                hotelAddress: "Sheraton Milan Malpensa, Ferno VA, Italy",
-                lunch: "볼차노 포르티치 거리 전통 이탈리안 비스트로(Ristorante Cavallino Bianco 등)",
-                gmapsLink: "https://www.google.com/maps/dir/Dolomiti+Exclusive+Your+Mountain+Suite/Piazza+Walther,+Bolzano/Esso+Malpensa+Cargo+City/Sheraton+Milan+Malpensa",
-                liftsLink: "",
-                stops: [
-                    { time: "08:00", name: "체크아웃 후 볼차노(Bolzano)로 출발", desc: "포차 디 파사 고별 및 출발" },
-                    { time: "09:30", name: "볼차노 공영 주차장 주차", desc: "추천 주차장: **Walther Square Parking** 또는 **Parking Bolzano Centro**" },
-                    { time: "10:00", name: "발터 광장 & 볼차노 대성당 투어", desc: "유서 깊은 아기자기한 오스트리아풍 광장 및 지붕이 아름다운 대성당 구경" },
-                    { time: "11:00", name: "포르티치 아케이드 쇼핑거리 걷기", desc: "중세식 회랑 건축물이 그대로 유지된 명품 및 향토 상점가 구경" },
-                    { time: "12:30", name: "밀라노 말펜사 공항을 향해 본격 장거리 이동", desc: "A22 -> A4 고속도로 주행 (약 3시간 30분 소요 예정)" },
-                    { time: "16:15", name: "말펜사 공항 근처 24시간 주유소 완충 주유", desc: "렌트카 반납 동선상 최적 주유소: **Esso Malpensa Cargo City 주유소** 또는 공항 외곽 **Eni Station** 추천" },
-                    { time: "17:00", name: "밀라노 말펜사 공항 렌트카 안전 반납", desc: "차량 검수 완료 및 보증금 가승인 해제 확인" },
-                    { time: "17:30", name: "쉐라톤 말펜사 에어포트 호텔 체크인", desc: "마지막 날 편안한 휴식 및 수하물 패킹 재정비" }
-                ],
-                coords: [
-                    { name: "볼차노 발터 광장 주차장", lat: 46.4982, lng: 11.3548 },
-                    { name: "Esso 말펜사 주유소", lat: 45.6178, lng: 8.7188 },
-                    { name: "밀라노 말펜사 공항 렌트카", lat: 45.6301, lng: 8.7230 },
-                    { name: "쉐라톤 밀란 말펜사 호텔", lat: 45.6288, lng: 8.7135 }
-                ]
-            },
-            12: {
-                dateStr: "7.22 수",
-                title: "밀라노에서 파리 경유하여 귀국길 (7.23 도착)",
-                hotel: "기내 숙박 (7.23(목) 오전 09:35 인천공항 도착)",
-                hotelAddress: "Incheon International Airport T2",
-                lunch: "파리 샤를드골 공항(CDG) 프랑스식 에피큐어 푸드 코트",
-                gmapsLink: "https://www.google.com/maps/dir/Milan+Malpensa+Airport,+Ferno,+Province+of+Varese,+Italy/Incheon+International+Airport,+Incheon",
-                liftsLink: "",
-                stops: [
-                    { time: "04:30", name: "호텔 체크아웃 및 말펜사 T1 탑승 카운터 이동", desc: "귀국 항공편 수속을 위해 이른 아침 출발 (에어프랑스 카운터)" },
-                    { time: "06:45", name: "밀라노 말펜사 공항 출발 (AF1131)", desc: "파리 샤를드골 공항을 향해 이륙" },
-                    { time: "08:15", name: "파리 CDG 공항 2F 터미널 도착", desc: "한국 귀국행 비행기 이륙(14:40) 전까지 6시간 25분의 매우 넉넉한 레이오버 타임" },
-                    { time: "11:30", name: "CDG 공항 면세 구역 터미널 2E 쇼핑 및 중식", desc: "라뒤레 마카롱, 에르메스/루이비통 매장 구경 및 와인 시음 추천" },
-                    { time: "14:40", name: "파리 샤를드골 공항(CDG) 출발 (AF0264)", desc: "인천국제공항 제2터미널을 향해 장거리 이륙" },
-                    { time: "09:35", name: "익일(7.23 목) 인천국제공항 안전 귀국", desc: "수하물 수령 및 귀가. 잊지 못할 돌로미티 여행 완성!" }
-                ],
-                coords: [
-                    { name: "밀라노 말펜사 공항 T1", lat: 45.6301, lng: 8.7230 },
-                    { name: "인천국제공항 T2", lat: 37.4602, lng: 126.4407 }
-                ]
-            }
-        };
-
-        // Initialize App & Storage
-        let checklistData = JSON.parse(localStorage.getItem('dolomiti_checklist')) || [
-            { id: 1, text: "여권, 국제면세 면허증, 렌트카 바우처 인쇄본", checked: true, category: "필수 서류" },
-            { id: 2, text: "트레킹화, 등산 양말, 기능성 등산복 상하의", checked: false, category: "하이킹 장비" },
-            { id: 3, text: "경량 패딩, 하드쉘 바람막이 (산 정상 기온 급강하 대비)", checked: false, category: "하이킹 장비" },
-            { id: 4, text: "접이식 등산 스틱 (무릎 보호 필수)", checked: false, category: "하이킹 장비" },
-            { id: 5, text: "상비약 (멀미약, 진통제, 밴드, 파스)", checked: false, category: "의약품/위생" },
-            { id: 6, text: "선글라스, 선크림, 아웃도어 모자", checked: false, category: "개인 위생" },
-            { id: 7, text: "스위스/유럽 멀티 콘센트 플러그 어댑터", checked: false, category: "전자기기" },
-            { id: 8, text: "보조 배터리, 폰 충전선, 차량용 거치대 & 시거잭 충전기", checked: false, category: "전자기기" },
-            { id: 9, text: "오프라인 구글 맵 전체 다운로드", checked: false, category: "디지털 준비" }
-        ];
-
-        let budgetData = JSON.parse(localStorage.getItem('dolomiti_budget')) || [
-            { id: 1, name: "렌트카 예약 선결제", category: "교통/케이블카", amount: 650, currency: "EUR" },
-            { id: 2, name: "말펜사 쉐라톤 1일차", category: "숙박", amount: 180, currency: "EUR" },
-            { id: 3, name: "Santre Dolomitic Home", category: "숙박", amount: 840, currency: "EUR" },
-            { id: 4, name: "DOLOMITI Exclusive 7박", category: "숙박", amount: 1450, currency: "EUR" }
-        ];
-
-        window.onload = function() {
-            // Leaflet map setup default center (Dolomites coordinates)
-            map = L.map('map', {
-                center: [46.55, 11.75],
-                zoom: 9,
-                zoomControl: false
-            });
-
-            // Clean Premium Dark Map Tiles
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; CARTO'
-            }).addTo(map);
-
-            markersGroup = L.layerGroup().addTo(map);
-
-            // Set default view page to Itinerary
-            navigate('itinerary');
-            selectDay(1);
-            
-            // Render basic lists
-            renderChecklist();
-            renderBudget();
-        }
-
-        // NAVIGATION SYSTEM
-        function navigate(pageId) {
-            // Update active nav button styles
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-ambergold-500');
-                btn.classList.add('text-slate-500');
-            });
-            document.getElementById(`nav-${pageId}`).classList.add('text-ambergold-500');
-            document.getElementById(`nav-${pageId}`).classList.remove('text-slate-500');
-
-            // Hide/Show pages
-            document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
-
-            // Leaflet resize trigger
-            if(pageId === 'itinerary') {
-                setTimeout(() => { map.invalidateSize(); }, 200);
-            }
-        }
-
-        // ITINERARY MANAGEMENT
-        function selectDay(dayIdx) {
-            currentDayIdx = dayIdx;
-
-            // Highlight Day selector
-            document.querySelectorAll('.day-tab').forEach(btn => {
-                btn.className = "day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-slate-950 text-slate-400 min-w-[56px]";
-            });
-            const activeBtn = document.getElementById(`daybtn-${dayIdx}`);
-            if(activeBtn) {
-                activeBtn.className = "day-tab shrink-0 px-3 py-2 rounded-xl text-center transition-all bg-dolomite-800 text-white border border-dolomite-700 min-w-[56px] ring-2 ring-ambergold-500/50";
-            }
-
-            const dayData = ITINERARY_DATA[dayIdx];
-            if(!dayData) return;
-
-            // Map Label Update
-            document.getElementById('map-day-indicator').innerText = `Day ${dayIdx}: ${dayData.title}`;
-
-            // Update Header Area
-            let linksHtml = '';
-            if (dayData.liftsLink) {
-                linksHtml = `
-                    <div class="mt-4">
-                        <a href="${dayData.liftsLink}" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-ambergold-500 to-ambergold-600 hover:from-ambergold-600 hover:to-ambergold-700 text-slate-950 font-black text-xs py-3 px-4 rounded-xl shadow-lg transform active:scale-95 transition-all">
-                            <i class="fa-solid fa-gauge-high"></i> 실시간 케이블카 가동 유무 조회하기 
-                        </a>
-                    </div>
-                `;
-            }
-
-            document.getElementById('day-header').innerHTML = `
-                <div class="flex justify-between items-start">
-                    <div>
-                        <span class="text-[10px] bg-ambergold-400 text-slate-950 font-extrabold px-2 py-0.5 rounded-full">Day ${dayIdx}</span>
-                        <h2 class="text-lg font-black text-white mt-1.5">${dayData.dateStr} • ${dayData.title}</h2>
-                    </div>
-                    <a href="${dayData.gmapsLink}" target="_blank" class="bg-slate-900 border border-slate-700 hover:bg-slate-800 text-ambergold-400 text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 font-bold shrink-0 transition-all">
-                        <i class="fa-solid fa-location-arrow"></i> 구글 지도 연동
-                    </a>
-                </div>
-                <div class="mt-4 space-y-2 border-t border-dolomite-800 pt-3 text-xs">
-                    <p class="flex items-center gap-2 text-slate-300">
-                        <i class="fa-solid fa-hotel text-ambergold-500 w-4 text-center"></i> 
-                        <span class="font-semibold text-white">숙소:</span> ${dayData.hotel}
-                    </p>
-                    <p class="flex items-center gap-2 text-slate-300">
-                        <i class="fa-solid fa-utensils text-ambergold-500 w-4 text-center"></i>
-                        <span class="font-semibold text-white">점심 추천:</span> ${dayData.lunch}
-                    </p>
-                </div>
-                ${linksHtml}
-            `;
-
-            // Update Timeline
-            let timelineHtml = '';
-            dayData.stops.forEach((stop, i) => {
-                timelineHtml += `
-                    <div class="relative">
-                        <!-- Icon Node -->
-                        <span class="absolute -left-[29px] mt-0.5 bg-slate-900 border-2 border-ambergold-500 rounded-full h-5 w-5 flex items-center justify-center text-[10px] text-ambergold-400 font-bold z-10">
-                            ${i + 1}
-                        </span>
-                        <!-- Content Box -->
-                        <div class="bg-slate-800/60 hover:bg-slate-800 border border-slate-700/40 p-3 rounded-xl transition-all shadow-sm">
-                            <div class="flex items-center justify-between">
-                                <h4 class="text-sm font-bold text-white">${stop.name}</h4>
-                                <span class="bg-dolomite-900 text-[10px] text-emerald-400 font-mono font-bold px-2 py-0.5 rounded-full border border-dolomite-800">${stop.time}</span>
-                            </div>
-                            <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">${stop.desc}</p>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('timeline-container').innerHTML = timelineHtml;
-
-            // Load Leaflet markers for current day
-            markersGroup.clearLayers();
-            if (dayData.coords && dayData.coords.length > 0) {
-                const bounds = [];
-                dayData.coords.forEach((c, index) => {
-                    const marker = L.marker([c.lat, c.lng]).addTo(markersGroup);
-                    marker.bindPopup(`<b class="text-slate-900 font-sans">${index + 1}. ${c.name}</b>`, {
-                        closeButton: false
-                    });
-                    bounds.push([c.lat, c.lng]);
-                    
-                    // Show popup for the first item
-                    if (index === 0) {
-                        marker.openPopup();
-                    }
-                });
-                
-                // Adjust map bounds to fit points
-                if(bounds.length > 1) {
-                    map.fitBounds(bounds, { padding: [30, 30] });
-                } else {
-                    map.setView(bounds[0], 12);
-                }
-            } else {
-                // Default Dolomite View
-                map.setView([46.55, 11.75], 9);
-            }
-        }
-
-        // CHECKLIST MANAGEMENT
-        function renderChecklist() {
-            const listContainer = document.getElementById('checklist-items');
-            listContainer.innerHTML = '';
-
-            // Group by category
-            const categories = {};
-            checklistData.forEach(item => {
-                if(!categories[item.category]) {
-                    categories[item.category] = [];
-                }
-                categories[item.category].push(item);
-            });
-
-            let completedCount = 0;
-
-            for(const cat in categories) {
-                let catHtml = `
-                    <div class="bg-slate-850 border border-slate-800 rounded-xl overflow-hidden mt-3 shadow-md">
-                        <div class="bg-dolomite-900/50 px-4 py-2 border-b border-dolomite-800 text-xs font-bold text-ambergold-400 uppercase tracking-wider">
-                            ${cat}
-                        </div>
-                        <div class="divide-y divide-slate-800">
-                `;
-
-                categories[cat].forEach(item => {
-                    if (item.checked) completedCount++;
-                    catHtml += `
-                        <div class="flex items-center justify-between px-4 py-3.5 hover:bg-slate-800/40 transition-all">
-                            <label class="flex items-center space-x-3 cursor-pointer flex-1 select-none">
-                                <input type="checkbox" onchange="toggleCheckItem(${item.id})" ${item.checked ? 'checked' : ''} 
-                                    class="w-4 h-4 rounded text-ambergold-500 bg-slate-900 border-slate-700 focus:ring-ambergold-500 focus:ring-offset-slate-900 focus:ring-2">
-                                <span class="text-xs ${item.checked ? 'line-through text-slate-500' : 'text-slate-200'}">${item.text}</span>
-                            </label>
-                            <button onclick="deleteCheckItem(${item.id})" class="text-slate-500 hover:text-red-400 p-1 transition-colors">
-                                <i class="fa-regular fa-trash-can text-xs"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-
-                catHtml += `</div></div>`;
-                listContainer.innerHTML += catHtml;
-            }
-
-            // Update Progress Bar
-            const total = checklistData.length;
-            const progressPercent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
-            
-            document.getElementById('checklist-progress').style.width = `${progressPercent}%`;
-            document.getElementById('checklist-count-text').innerText = `${completedCount} / ${total} 완료`;
-            document.getElementById('checklist-percent-text').innerText = `${progressPercent}%`;
-
-            // Sync with local storage
-            localStorage.setItem('dolomiti_checklist', JSON.stringify(checklistData));
-        }
-
-        function toggleCheckItem(id) {
-            checklistData = checklistData.map(item => {
-                if(item.id === id) item.checked = !item.checked;
-                return item;
-            });
-            renderChecklist();
-        }
-
-        function deleteCheckItem(id) {
-            checklistData = checklistData.filter(item => item.id !== id);
-            renderChecklist();
-        }
-
-        function addChecklistItem(e) {
-            e.preventDefault();
-            const textInput = document.getElementById('new-item-text');
-            const text = textInput.value.trim();
-            if(!text) return;
-
-            const newItem = {
-                id: Date.now(),
-                text: text,
-                checked: false,
-                category: "기타 준비물"
-            };
-
-            checklistData.push(newItem);
-            textInput.value = '';
-            renderChecklist();
-        }
-
-        // BUDGET MANAGEMENT
-        function renderBudget() {
-            const listContainer = document.getElementById('expense-items-list');
-            listContainer.innerHTML = '';
-
-            let totalEUR = 0;
-
-            budgetData.forEach(item => {
-                let eurAmount = 0;
-                let krwAmount = 0;
-
-                if (item.currency === 'EUR') {
-                    eurAmount = item.amount;
-                    krwAmount = item.amount * EUR_TO_KRW;
-                } else {
-                    krwAmount = item.amount;
-                    eurAmount = item.amount / EUR_TO_KRW;
-                }
-
-                totalEUR += eurAmount;
-
-                listContainer.innerHTML += `
-                    <div class="bg-slate-800/80 border border-slate-700/50 px-4 py-3.5 rounded-xl flex items-center justify-between hover:bg-slate-800 transition-all shadow-sm">
-                        <div class="space-y-1">
-                            <span class="text-[9px] bg-dolomite-900 text-ambergold-400 font-bold px-1.5 py-0.5 rounded border border-dolomite-800">${item.category}</span>
-                            <h4 class="text-xs font-bold text-white">${item.name}</h4>
-                            <p class="text-[10px] text-slate-400">₩${Math.round(krwAmount).toLocaleString()}</p>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="text-right">
-                                <span class="text-xs font-black text-ambergold-400">€${eurAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</span>
-                            </div>
-                            <button onclick="deleteExpense(${item.id})" class="text-slate-500 hover:text-red-400 p-1.5 transition-colors">
-                                <i class="fa-regular fa-trash-can text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Update Total Summary
-            document.getElementById('total-eur-display').innerText = `€${totalEUR.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('total-krw-display').innerText = `₩${Math.round(totalEUR * EUR_TO_KRW).toLocaleString()}`;
-
-            // Sync with local storage
-            localStorage.setItem('dolomiti_budget', JSON.stringify(budgetData));
-        }
-
-        function addExpense() {
-            const nameInput = document.getElementById('expense-name');
-            const categorySelect = document.getElementById('expense-category');
-            const amountInput = document.getElementById('expense-amount');
-            const currencySelect = document.getElementById('expense-currency');
-
-            const name = nameInput.value.trim();
-            const category = categorySelect.value;
-            const amount = parseFloat(amountInput.value);
-            const currency = currencySelect.value;
-
-            if(!name || isNaN(amount) || amount <= 0) {
-                // Simple inline custom modal/warning as alternatives to standard native blocks
-                alertCustom('올바른 지출 명칭과 금액을 입력해주세요.');
-                return;
-            }
-
-            const newExpense = {
-                id: Date.now(),
-                name: name,
-                category: category,
-                amount: amount,
-                currency: currency
-            };
-
-            budgetData.push(newExpense);
-
-            // Reset Form Inputs
-            nameInput.value = '';
-            amountInput.value = '';
-
-            renderBudget();
-        }
-
-        function deleteExpense(id) {
-            budgetData = budgetData.filter(item => item.id !== id);
-            renderBudget();
-        }
-
-        // Custom micro toast notification
-        function alertCustom(message) {
-            const toast = document.createElement('div');
-            toast.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-2xl z-50 text-xs text-center';
-            toast.innerText = message;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
-                setTimeout(() => toast.remove(), 500);
-            }, 2500);
-        }
-    </script>
+<body class="bg-slate-50 text-slate-800 pb-20">
+
+<header class="bg-gradient-to-r from-sky-500 via-blue-600 to-cyan-500 text-white sticky top-0 z-50 shadow-md px-4 py-3.5 flex justify-between items-center">
+<h1 class="text-xl font-bold tracking-tight"><i class="fa-solid fa-mountain-sun mr-2"></i>돌로미티 여행</h1>
+<span class="text-xs bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">2인 · 11박 12일</span>
+</header>
+
+<main class="max-w-md mx-auto p-4">
+
+<div id="page-itinerary" class="page-view space-y-6">
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 bg-gradient-to-br from-white to-cyan-50/30">
+<h3 class="font-bold text-slate-700 mb-2"><i class="fa-solid fa-plane-departure text-sky-500 mr-1"></i> 항공편 및 숙소 개요</h3>
+<p class="text-xs text-slate-500 leading-relaxed">
+<strong>출국:</strong> 7.11 11:40 ICN T2 → AF0267 → CDG 2E / AF1130 → MXP 23:00 도착<br>
+<strong>귀국:</strong> 7.22 06:45 MXP → AF1131 → CDG 2F / AF0264 → ICN (7.23 09:35 도착)<br>
+<strong>렌트카:</strong> 7.12 11:00 MXP 픽업 ~ 7.22 17:00 MXP 반납
+</p>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-sky-400"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-sky-600 tracking-wide uppercase">Day 1</span>
+<h2 class="text-lg font-bold text-slate-800">7월 11일 (토) · 이탈리아 도착</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>23:00</strong> 밀라노 말펜사 공항 도착 (AF1130)</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소 체크인:</strong> 쉐라톤 밀란 말펜사 에어포트 호텔 & 컨퍼런스센터</p>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-sky-500"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-sky-600 tracking-wide uppercase">Day 2</span>
+<h2 class="text-lg font-bold text-slate-800">7월 12일 (일) · 브레사노네 이동</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-car text-xs text-cyan-500 mr-1"></i> <strong>11:00</strong> 말펜사 공항 렌트카 인수 및 출발</p>
+<p><i class="fa-solid fa-square-parking text-xs text-blue-500 mr-1"></i> 고속도로 최단거리 이동 중 <strong>Area di Servizio Paganella Est</strong> 휴게소 방문</p>
+<p><i class="fa-solid fa-tree text-xs text-emerald-500 mr-1"></i> <strong>브레사노네 관광:</strong> 구시가지 접근이 용이한 최적 주차장 이용</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Brixen]:</strong> Osteria statistics - 현지식 타베르나 (파스타 및 티롤 전통요리)</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소 체크인:</strong> Santre Dolomitic Home</p>
+</div>
+<a href="https://www.google.com/maps/dir/Sheraton+Milan+Malpensa+Airport+Hotel+%26+Conference+Centre/Area+di+servizio+Paganella+Est/Parkhaus+Bressanone+-+Autosilo+Brixen/Santre+Dolomitic+Home" target="_blank" class="inline-flex items-center justify-center w-full bg-sky-500 hover:bg-sky-600 text-white font-medium py-2.5 px-4 rounded-xl text-xs transition duration-200 shadow-sm"><i class="fa-solid fa-map-location-dot mr-1.5"></i> Day 2 구글맵 경로 확인</a>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-cyan-400"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-cyan-600 tracking-wide uppercase">Day 3</span>
+<h2 class="text-lg font-bold text-slate-800">7월 13일 (월) · 세체다 & 몬테파나</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>08:00</strong> 숙소 출발 → 14번 콜레이저 리프트 탑승 후 세체다(Seceda) 조망</p>
+<p><i class="fa-solid fa-circle-2 text-xs text-sky-500 mr-1"></i> 콜레이저 하행 후 <strong>13:00 몬테파나 주차장</strong> 주차</p>
+<p><i class="fa-solid fa-circle-3 text-xs text-sky-500 mr-1"></i> Seggiovia 탑승 → 몬 데 세우라 → <strong>526A 트레킹</strong> → 치암피노이</p>
+<p><i class="fa-solid fa-circle-4 text-xs text-sky-500 mr-1"></i> 29번 곤돌라 하행 → 셀바 디 가르데나 마을 하산</p>
+<p><i class="fa-solid fa-bus text-xs text-indigo-500 mr-1"></i> 버스정류장(S.da Nives)에서 <strong>350/358/360번 버스</strong>로 몬테파나 주차장 복귀</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Seceda]:</strong> Baita Sofie Hütte - 세체다 정상 부근의 파노라마 뷰 맛집</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> Santre Dolomitic Home</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/Santre+Dolomitic+Home/Streda+Raiser,+61,+39048+Santa+Cristina+Valgardena+BZ/Streda+Pana,+5,+39047+Santa+Cristina+Valgardena+BZ/Selva+di+Val+Gardena/Santre+Dolomitic+Home" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Day 4</span>
+<h2 class="text-lg font-bold text-slate-800">7월 14일 (화) · 알페디 시우시 대종주</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>09:00</strong> 출발 → 10:00 오르티세이 1번 곤돌라 주차 후 알페디시우시 상행</p>
+<p><i class="fa-solid fa-circle-2 text-xs text-sky-500 mr-1"></i> 59번 Al Sole 리프트 하행 → 스포츠호텔 → 살트리아 방향 도보 이동</p>
+<p><i class="fa-solid fa-circle-3 text-xs text-sky-500 mr-1"></i> 65번 Florian 리프트 탑승 → 윌리엄스 산장 → 티레스 산장 이동</p>
+<p><i class="fa-solid fa-circle-4 text-xs text-sky-500 mr-1"></i> Alpenhotel Panorama 지나 Panorama 리프트 하행 → Compatsch 광장</p>
+<p><i class="fa-solid fa-bus text-xs text-indigo-500 mr-1"></i> Compatsch에서 <strong>179번 → 172번 버스 환승</strong>으로 오르티세이 복귀</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Alpe di Siusi]:</strong> Rauchhütte - 멋진 사쏘룽고 전망과 맛있는 치즈 요리</p>
+<p><i class="fa-solid fa-hotel text-xs text-emerald-500 mr-1"></i> <strong>새 숙소 체크인:</strong> DOLOMITI Exclusive Your Mountain Suite (Pozza di Fassa)</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/Santre+Dolomitic+Home/Via+Setil,+9,+39040+Ortisei+BZ/Compatsch/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/summer/seiser-alm" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-sky-400"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-sky-600 tracking-wide uppercase">Day 5</span>
+<h2 class="text-lg font-bold text-slate-800">7월 15일 (수) · 카티나치오 트레킹</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>09:00</strong> 출발 → Vigo di Fassa에서 211번 케이블카로 참페디에 산장 상행</p>
+<p><i class="fa-solid fa-circle-2 text-xs text-sky-500 mr-1"></i> Rifugio Gardeccia → Rifugio Vajolet 핵심 트레킹</p>
+<p><i class="fa-solid fa-circle-3 text-xs text-sky-500 mr-1"></i> 역방향으로 PERA 마을 주차장으로 하산 후 숙소 귀가</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Catinaccio]:</strong> Rifugio Vajolet - 거대한 암벽 아래에서 즐기는 티롤식 스튜와 파스타</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> DOLOMITI Exclusive Suite</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Str.+de+Col+de+M%C3%A8,+10,+38036+Vigo+di+Fassa+TN/Pera+di+Fassa/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-cyan-500"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-cyan-600 tracking-wide uppercase">Day 6</span>
+<h2 class="text-lg font-bold text-slate-800">7월 16일 (목) · 카레짜 호수 & 콜 로델라</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-sun text-xs text-amber-500 mr-1"></i> <strong>오전:</strong> 09:00 Carezza 호수 주차 및 관광 → Paolina 리프트 탑승 → 549번길 → 독수리 동상 → 545번길 → VAEL 산장 찍고 카레짜 복귀</p>
+<p><i class="fa-solid fa-moon text-xs text-indigo-500 mr-1"></i> <strong>오후:</strong> Campitello di Fassa 이동 → 152번 리프트로 Col Rodella 상행 → Des Alpes 산장 출발 → 프리드리히 아우구스트 산장 (크라펜&커피) → 산드로 페르티니 산장 → 사쏘 피아토산장 왕복</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Friedrich August]:</strong> Rifugio Friedrich August - 시그니처 크라펜 도넛 필수!</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> DOLOMITI Exclusive Suite</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Lago+di+Carezza/Seggiovia+Paolina/Funivia+Campitello+-+Col+Rodella/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/summer/carezza" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-blue-600"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Day 7</span>
+<h2 class="text-lg font-bold text-slate-800">7월 17일 (금) · 사쏘 포르도이 & QC떼르메</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>09:00</strong> Passo Pordoi 주차 → 103번 리프트로 테라짜 델레 돌로미티 상행 후 피츠 포에 트레킹</p>
+<p><i class="fa-solid fa-circle-2 text-xs text-sky-500 mr-1"></i> 사쏘룽고 주차장 이동 → In Sella 커피 타임</p>
+<p><i class="fa-solid fa-circle-3 text-xs text-sky-500 mr-1"></i> 2인 스탠딩 관짝케이블카 탑승 → Rifugio Toni Demetz 조망 후 컴백</p>
+<p><i class="fa-solid fa-spa text-xs text-teal-500 mr-1"></i> <strong>야간 일정:</strong> 휴식 후 <strong>QC Terme Dolomiti</strong> 온천에서 힐링 리프레시</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Passo Pordoi]:</strong> Rifugio Maria - 해발 2,950m에서 즐기는 파노라마 뷰 런치</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> DOLOMITI Exclusive Suite</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Passo+Pordoi/Passo+Sella/QC+Terme+Dolomiti/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/val-di-fassa-carezza" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-sky-500"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-sky-600 tracking-wide uppercase">Day 8</span>
+<h2 class="text-lg font-bold text-slate-800">7월 18일 (토) · 마르몰라다 & 비엘달판</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-snowflake text-xs text-blue-400 mr-1"></i> <strong>09:00</strong> Malga Ciapela 주차 → 케이블카 3단계 환승 → 테라짜 마르몰라다(최고봉 만년설)</p>
+<p><i class="fa-solid fa-walking text-xs text-emerald-500 mr-1"></i> Alba 마을 이동 후 Doleda 주차장 주차 → 130번 리프트 탑승 콜데로시 상행 → 601번 트레일 → 프레다롤라 산장 → 비엘달판 산장 왕복</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Viel Del Pan]:</strong> Rifugio Viel dal Pan - 마르몰라다 빙하 전경을 정면으로 감상하는 테라스 산장</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> DOLOMITI Exclusive Suite</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Malga+Ciapela/Parcheggio+Funivia+Doleda/Rifugio+Viel+dal+Pan/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/arabba-marmolada" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-cyan-400"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-cyan-600 tracking-wide uppercase">Day 9</span>
+<h2 class="text-lg font-bold text-slate-800">7월 19일 (일) · 알타 바디아 초원 트레킹</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>09:00</strong> 코르바라 이동 및 Col Alt 주차 → 1번 곤돌라 상행 → 23B/23 트레일 하이킹</p>
+<p><i class="fa-solid fa-circle-2 text-xs text-sky-500 mr-1"></i> Piz Arlara 산장 → Bioch 산장 → Pralongia 산장 순차 방문 후 컴백</p>
+<p><i class="fa-solid fa-star text-xs text-amber-500 mr-1"></i> <strong>[예비 일정]:</strong> 시간 여유 시 Badia 마을 이동 후 61번 La Crusc 리프트 탑승 및 아르멘타로 초원 산책 추가</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Alta Badia]:</strong> Rifugio Bioch - 고품격 남티롤 전통 파스타 및 수제 디저트</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> DOLOMITI Exclusive Suite</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Funivia+Col+Alt/Rifugio+Pralongi%C3%A1/Badia/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/alta-badia" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Day 10</span>
+<h2 class="text-lg font-bold text-slate-800">7월 20일 (월) · 라시에사 & 가르데나 패스</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>08:00</strong> 오르티세이 세체다 주차장 주차 → Seilbahn Raschötz 이동 후 푸니쿨라레 탑승</p>
+<p><i class="fa-solid fa-circle-2 text-xs text-sky-500 mr-1"></i> 라시에사 산장 및 Cappella Santa Croce 성당 하이킹 후 하행</p>
+<p><i class="fa-solid fa-circle-3 text-xs text-sky-500 mr-1"></i> 셀바 마을 Dantercepies 주차장 이동 → 케이블카 탑승해 가르데나 패스 & 피츠보에 절경 조망 후 하산 및 마을 관광</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Raschötz]:</strong> Rifugio Resciesa - 산장에서 직접 끓인 정통 굴라시 스튜</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> DOLOMITI Exclusive Suite</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Parcheggio+Seceda/Dantercepies+Cableways/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="inline-flex items-center justify-center bg-sky-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-map-location-dot mr-1"></i> 구글맵 경로</a>
+<a href="https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" target="_blank" class="inline-flex items-center justify-center bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-clock mr-1"></i> 케이블카 시간</a>
+</div>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-sky-400"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-sky-600 tracking-wide uppercase">Day 11</span>
+<h2 class="text-lg font-bold text-slate-800">7월 21일 (화) · 볼차노 & 밀라노 이동</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600 mb-4">
+<p><i class="fa-solid fa-circle-1 text-xs text-sky-500 mr-1"></i> <strong>08:00</strong> 볼차노 출발 → Walther Square 또는 Bolzano Centro 주차</p>
+<p><i class="fa-solid fa-circle-2 text-xs text-sky-500 mr-1"></i> 도보로 발터광장, 볼차노대성당, 포르티치 거리 하이라이트 투어</p>
+<p><i class="fa-solid fa-gas-pump text-xs text-amber-500 mr-1"></i> 밀라노 말펜사 공항 근처 Eni 주유소에서 최종 주유 완료</p>
+<p><i class="fa-solid fa-car-crash text-xs text-red-500 mr-1"></i> <strong>17:00</strong> 말펜사 공항 렌트카 최종 반납</p>
+<p class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 text-xs text-amber-800"><i class="fa-solid fa-utensils mr-1"></i> <strong>점심 추천 [Bolzano]:</strong> Wirtshaus Vögele - 볼차노 유서 깊은 로컬 남티롤 레스토랑</p>
+<p><i class="fa-solid fa-hotel text-xs text-blue-500 mr-1"></i> <strong>숙소:</strong> 쉐라톤 밀란 말펜사 에어포트 호텔</p>
+</div>
+<a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Piazza+Walther,+Bolzano/Eni+Station,+Somma+Lombardo/Sheraton+Milan+Malpensa+Airport+Hotel" target="_blank" class="inline-flex items-center justify-center w-full bg-sky-500 hover:bg-sky-600 text-white font-medium py-2.5 px-4 rounded-xl text-xs transition duration-200 shadow-sm"><i class="fa-solid fa-map-location-dot mr-1.5"></i> Day 11 구글맵 경로 확인</a>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-slate-400"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-xs font-bold text-slate-500 tracking-wide uppercase">Day 12</span>
+<h2 class="text-lg font-bold text-slate-800">7월 22일 (수) ~ 23일 · 귀국</h2>
+</div>
+</div>
+<div class="space-y-3 text-sm text-slate-600">
+<p><i class="fa-solid fa-plane-departure text-xs text-blue-500 mr-1"></i> <strong>06:45</strong> 밀라노 공항 출발 (AF1131) → 파리 CDG 2F 환승</p>
+<p><i class="fa-solid fa-plane-arrival text-xs text-sky-500 mr-1"></i> <strong>14:40</strong> 파리 CDG 2E 출발 (AF0264) → <strong>7/23 09:35</strong> 인천공항 T2 최종 도착</p>
+</div>
+</div>
+</div>
+
+<div id="page-checklist" class="page-view hidden space-y-4">
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+<h2 class="text-lg font-bold text-slate-800 mb-4"><i class="fa-solid fa-square-check text-sky-500 mr-1"></i> 여행 준비물 Checklist</h2>
+<div class="flex gap-2 mb-4">
+<input type="text" id="todo-input" placeholder="새로운 준비물 추가..." class="flex-1 text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-sky-500">
+<button onclick="addTodo()" class="bg-sky-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm hover:bg-sky-600 transition"><i class="fa-solid fa-plus"></i></button>
+</div>
+<ul id="todo-list" class="divide-y divide-slate-100">
+</ul>
+</div>
+</div>
+
+<div id="page-budget" class="page-view hidden space-y-4">
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 bg-gradient-to-br from-white to-blue-50/20">
+<h2 class="text-lg font-bold text-slate-800 mb-2"><i class="fa-solid fa-wallet text-sky-500 mr-1"></i> 여행 가계부</h2>
+<p class="text-xs text-slate-400 mb-4">고정 환율: 1 EUR = 1,750 KRW</p>
+
+<div class="bg-slate-900 text-white rounded-xl p-4 flex justify-between items-center mb-5">
+<div>
+<p class="text-[10px] text-slate-400 uppercase tracking-wider">총 지출 원화 환산액</p>
+<h3 class="text-xl font-bold mt-0.5" id="total-krw">0 원</h3>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-slate-400 uppercase tracking-wider">총 유로화</p>
+<p class="text-sm font-semibold text-cyan-400" id="total-eur">€ 0.00</p>
+</div>
+</div>
+
+<div class="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200 mb-5">
+<input type="text" id="budget-title" placeholder="항목명 (예: 식비, 리프트권)" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-3 py-2 focus:outline-none">
+<div class="flex gap-2">
+<input type="number" id="budget-amount" placeholder="금액 입력" class="flex-1 text-sm bg-white border border-slate-200 rounded-lg px-3 py-2 focus:outline-none">
+<select id="budget-currency" class="text-sm bg-white border border-slate-200 rounded-lg px-2 py-2 focus:outline-none">
+<option value="EUR">EUR (€)</option>
+<option value="KRW">KRW (원)</option>
+</select>
+</div>
+<button onclick="addBudget()" class="w-full bg-cyan-500 text-white py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-cyan-600">예산 항목 등록</button>
+</div>
+
+<div id="budget-list" class="space-y-2.5">
+</div>
+</div>
+</div>
+
+</main>
+
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-50 flex justify-around max-w-md mx-auto">
+<button onclick="switchPage('itinerary')" id="tab-itinerary" class="flex-1 py-2.5 flex flex-col items-center justify-center text-slate-400 active-tab">
+<i class="fa-solid fa-calendar-days text-lg mb-0.5"></i>
+<span class="text-[10px] font-medium">여행계획</span>
+</button>
+<button onclick="switchPage('checklist')" id="tab-checklist" class="flex-1 py-2.5 flex flex-col items-center justify-center text-slate-400">
+<i class="fa-solid fa-list-check text-lg mb-0.5"></i>
+<span class="text-[10px] font-medium">체크리스트</span>
+</button>
+<button onclick="switchPage('budget')" id="tab-budget" class="flex-1 py-2.5 flex flex-col items-center justify-center text-slate-400">
+<i class="fa-solid fa-euro-sign text-lg mb-0.5"></i>
+<span class="text-[10px] font-medium">예산</span>
+</button>
+</nav>
+
+<script>
+const EXCHANGE_RATE = 1750;
+
+// State Storage
+let todos = JSON.parse(localStorage.getItem('dolomiti_todos')) || [
+{ id: 1, text: '여권 및 국제운전면허증 챙기기', done: true },
+{ id: 2, text: '돌로미티 슈퍼썸머 카드 온라인 예약', done: false },
+{ id: 3, text: '렌트카 보증금용 신용카드 확인', done: false }
+ ];
+
+let budgets = JSON.parse(localStorage.getItem('dolomiti_budgets')) || [];
+
+// Tab Switch Logic
+function switchPage(pageId) {
+document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden'));
+document.getElementById(page-${pageId}`).classList.remove('hidden');
+
+document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+document.getElementById(tab-${pageId}`).classList.add('active-tab');
+window.scrollTo(0, 0);
+}
+
+// --- CHECKLIST APP ACTIONS ---
+function renderTodos() {
+const listEl = document.getElementById('todo-list');
+listEl.innerHTML = '';
+todos.forEach(todo => {
+listEl.innerHTML += &lt;li class="flex items-center justify-between py-3"&gt; &lt;div class="flex items-center gap-3" onclick="toggleTodo(${todo.id})">
+<i class="fa-regular ${todo.done ? 'fa-square-check text-sky-500' : 'fa-square text-slate-300'} text-lg cursor-pointer"&gt;&lt;/i&gt; &lt;span class="text-sm ${todo.done ? 'line-through text-slate-400' : 'text-slate-700'}">${todo.text}&lt;/span&gt; &lt;/div&gt; &lt;button onclick="deleteTodo(${todo.id})" class="text-slate-300 hover:text-red-400 p-1"><i class="fa-solid fa-trash-can text-xs"></i></button>
+</li>
+`;
+});
+localStorage.setItem('dolomiti_todos', JSON.stringify(todos));
+}
+
+function addTodo() {
+const input = document.getElementById('todo-input');
+if(!input.value.trim()) return;
+todos.push({ id: Date.now(), text: input.value.trim(), done: false });
+input.value = '';
+renderTodos();
+}
+
+function toggleTodo(id) {
+todos = todos.map(t => t.id === id ? {...t, done: !t.done} : t);
+renderTodos();
+}
+
+function deleteTodo(id) {
+todos = todos.filter(t => t.id !== id);
+renderTodos();
+}
+
+// --- BUDGET APP ACTIONS ---
+function renderBudgets() {
+const listEl = document.getElementById('budget-list');
+listEl.innerHTML = '';
+
+let totalEur = 0;
+let totalKrw = 0;
+
+budgets.forEach(b => {
+let eurAmt = b.currency === 'EUR' ? b.amount : b.amount / EXCHANGE_RATE;
+let krwAmt = b.currency === 'KRW' ? b.amount : b.amount * EXCHANGE_RATE;
+
+totalEur += eurAmt;
+totalKrw += krwAmt;
+
+listEl.innerHTML += &lt;div class="bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center shadow-2xs"&gt; &lt;div&gt; &lt;p class="text-sm font-medium text-slate-800"&gt;${b.title}</p>
+<p class="text-[11px] text-slate-400">latex
+{b.currency === 'EUR' ? `€
+
+{b.amount.toLocaleString()}:latex
+{b.amount.toLocaleString()}원`} · 원화 환산: ₩
+
+{Math.round(krwAmt).toLocaleString()}</p>
+</div>
+<button onclick="deleteBudget(${b.id})" class="text-slate-300 hover:text-red-400 px-2 py-1"><i class="fa-solid fa-minus-circle"></i></button>
+</div>
+`;
+});
+
+document.getElementById('total-krw').innerText = Math.round(totalKrw).toLocaleString() + ' 원';
+document.getElementById('total-eur').innerText = '€ ' + totalEur.toFixed(2);
+localStorage.setItem('dolomiti_budgets', JSON.stringify(budgets));
+}
+
+function addBudget() {
+const title = document.getElementById('budget-title');
+const amount = document.getElementById('budget-amount');
+const currency = document.getElementById('budget-currency');
+
+if(!title.value.trim() || !amount.value) return;
+
+budgets.push({
+id: Date.now(),
+title: title.value.trim(),
+amount: parseFloat(amount.value),
+currency: currency.value
+});
+
+title.value = '';
+amount.value = '';
+renderBudgets();
+}
+
+function deleteBudget(id) {
+budgets = budgets.filter(b => b.id !== id);
+renderBudgets();
+}
+
+// Initialize Data Load
+renderTodos();
+renderBudgets();
+</script>
 </body>
 </html>
-
-```
