@@ -3,1240 +3,912 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>이탈리아 돌로미티 여행 가이드 & 플래너</title>
+    <title>돌로미티 여행 플래너</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font Awesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            background-color: #f0f9ff; /* Light Sky Blue Background */
+        }
+        /* Custom Scrollbar for better look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-24">
+<body class="max-w-md mx-auto min-h-screen shadow-2xl bg-white flex flex-col relative pb-20">
 
     <!-- App Header -->
-    <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
-            <div>
-                <h1 class="text-lg font-bold tracking-tight flex items-center gap-2">
-                    <i data-lucide="mountain" class="w-5 h-5"></i> 돌로미티 여행 가이드
-                </h1>
-                <p class="text-xs text-emerald-100">7.11 (금) ~ 7.22 (수) | 2인 자유여행</p>
-            </div>
-            <div class="bg-emerald-800 px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-                <i data-lucide="calculator" class="w-3 h-3"></i> 1€ = 1,750원
-            </div>
+    <header class="bg-gradient-to-r from-blue-500 via-teal-400 to-emerald-400 text-white p-5 rounded-b-3xl shadow-md sticky top-0 z-50">
+        <div class="flex justify-between items-center mb-1">
+            <h1 class="text-2xl font-black tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-mountain-sun text-yellow-200"></i> 돌로미티 플래너
+            </h1>
+            <span class="bg-white/20 text-xs px-2 py-1 rounded-full font-bold backdrop-blur-sm">2인 여행</span>
         </div>
+        <p class="text-xs text-white/90 font-medium">2026.07.11(토) ~ 2026.07.22(수)</p>
     </header>
 
-    <!-- Main Content Container (Mobile-first max-w-md) -->
-    <main class="max-w-md mx-auto px-4 pt-4 pb-8 space-y-6">
-
-        <!-- Tab Content Areas -->
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 overflow-y-auto" id="main-content">
         
-        <!-- [TAB 1: ITINERARY] -->
-        <section id="tab-itinerary" class="tab-content space-y-5">
-            <!-- Flight & Stay & Rental Overview Card -->
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
-                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm border-b pb-2 border-slate-100">
-                    <i data-lucide="info" class="text-emerald-600 w-4 h-4"></i> 예약 확정 기본 정보
-                </h3>
-                <div class="grid grid-cols-2 gap-2 text-xs">
-                    <div class="bg-slate-50 p-2.5 rounded-xl">
-                        <p class="text-slate-400 mb-0.5">인원</p>
-                        <p class="font-bold text-slate-700">성인 2명</p>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-xl">
-                        <p class="text-slate-400 mb-0.5">렌트카 픽업</p>
-                        <p class="font-bold text-slate-700 text-[11px]">7.12 11:00 (MXP)</p>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-xl col-span-2">
-                        <p class="text-slate-400 mb-0.5">렌트카 반납</p>
-                        <p class="font-bold text-slate-700">7.22 17:00 (MXP 공항)</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Day-by-Day Accordions -->
-            <div class="space-y-4">
-                <h2 class="text-base font-bold text-slate-900 flex items-center gap-2 px-1">
-                    <i data-lucide="calendar" class="text-emerald-600 w-5 h-5"></i> 상세 일자별 루트
+        <!-- PAGE 1: ITINERARY -->
+        <section id="page-itinerary" class="app-page">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-blue-500 rounded-full inline-block"></span>
+                    상세 여행 일정
                 </h2>
+                <span class="text-xs text-slate-500">각 일정을 눌러 상세 정보를 보세요</span>
+            </div>
 
-                <!-- Day 1 (7.11) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(1)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 1</span>
-                            <span class="font-bold text-slate-900">7.11 (금) 출국 & 밀라노 도착</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-1" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-1" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-2 border-l-2 border-emerald-500 pl-3">
-                            <div class="flex items-start gap-1.5">
-                                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded mt-0.5">항공</span>
-                                <div>
-                                    <p class="font-bold">출국편: AF0267 (인천T2 -> 파리CDG)</p>
-                                    <p class="text-xs text-slate-500">11:40 출발 -> 18:40 도착 (CDG 2E)</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-1.5 mt-2">
-                                <span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-1.5 py-0.5 rounded mt-0.5">환승</span>
-                                <div>
-                                    <p class="font-bold">경유편: AF1130 (파리CDG -> 밀라노MXP)</p>
-                                    <p class="text-xs text-slate-500">21:30 출발 (CDG 2F) -> 23:00 도착 (말펜사 T1)</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-amber-50 border border-amber-100 rounded-xl p-3 text-xs flex items-start gap-2">
-                            <i data-lucide="hotel" class="text-amber-600 w-4 h-4 shrink-0 mt-0.5"></i>
-                            <div>
-                                <p class="font-bold text-amber-900">숙소 (1박)</p>
-                                <p class="text-amber-800">쉐라톤 밀란 말펜사 에어포트 호텔 & 컨퍼런스센터</p>
-                                <p class="text-[10px] text-amber-600 mt-0.5">※ 공항 터미널 1과 바로 연결되어 밤늦은 도착 후 도보 이동하기에 최적의 위치입니다.</p>
-                            </div>
-                        </div>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/인천국제공항+제2여객터미널/Paris+Charles+de+Gaulle+Airport+(CDG),+95700+Roissy-en-France,+프랑스/밀라노+말펜사+공항+(MXP),+Fernno,+이탈리아/Sheraton+Milan+Malpensa+Airport+Hotel+%26+Conference+Centre" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 전체 이동 동선 확인
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-1" onblur="saveMemo(1)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="비행기 좌석 번호, 챙길 것 등 메모를 남기세요..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 2 (7.12) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(2)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 2</span>
-                            <span class="font-bold text-slate-900">7.12 (토) 렌트카 픽업 & 브레사노네</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-2" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-2" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 11:00 렌트카 픽업</p>
-                                    <p class="text-xs text-slate-500">밀라노 말펜사 공항 렌트카 카운터</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">이동 & 휴게소 경유</p>
-                                    <p class="text-xs text-slate-500">고속도로 최단거리 동선 이용</p>
-                                    <p class="text-xs text-emerald-700 font-semibold">📍 경유지: Area di Servizio Paganella Est 휴게소</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">브레사노네 (Bressanone) 관광</p>
-                                    <p class="text-xs text-slate-500">시간 여유 시 예쁜 중세마을 둘러보기</p>
-                                    <div class="mt-1 bg-slate-50 p-2 rounded-lg border border-slate-100 text-xs">
-                                        <p class="font-semibold text-slate-700">🚗 추천 최적 주차장 (도보 5분):</p>
-                                        <p class="text-slate-600">Parcheggio Autosilo Bressanone (Aquarena 근처)</p>
-                                        <p class="text-slate-500 text-[11px]">(주소: Via Cesare Battisti, 8, 39042 Bressanone BZ)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Finsterwirt (Bressanone):</strong> 브레사노네 구시가지 중심에 위치한 전통 남티롤 스타일 맛집. 현지 만두(Knödel)와 파스타가 훌륭합니다.
-                            </p>
-                        </div>
-
-                        <!-- Stay -->
-                        <div class="bg-amber-50 border border-amber-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-amber-900">숙소</p>
-                            <p class="text-amber-800">Santre Dolomitic Home (웰빙&럭셔리 홈)</p>
-                        </div>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/Milano+Malpensa+Airport/Area+di+Servizio+Paganella+Est/Parcheggio+Autosilo+Bressanone/Santre+Dolomitic+Home" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 최단 이동 경로 보기
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-2" onblur="saveMemo(2)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="렌트카 인수 주의사항, 하이웨이 톨비 예산 등을 메모하세요..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 3 (7.13) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(3)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 3</span>
-                            <span class="font-bold text-slate-900">7.13 (일) 세체다 & 몬테파나 트레킹</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-3" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-3" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 08:00 숙소 출발</p>
-                                    <p class="text-xs text-slate-500">14번 콜레이저 리프트 탑승장으로 이동</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">세체다 (Seceda) 정복</p>
-                                    <p class="text-xs text-slate-500">14번 Col Raiser 리프트 탑승 -> 세체다 전망대 감상 후 콜레이저로 하행</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오후 13:00 몬테파나 주차장 이동</p>
-                                    <p class="text-xs text-slate-500">몬테파나 주차장에 주차</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">몬 데 세우라 ~ 치암피노이 트레킹</p>
-                                    <p class="text-xs text-slate-500">Seggiovia 리프트 탑승 -> 몬 데 세우라 -> 526A 트레일 -> 치암피노이</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">5</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">하행 및 버스 복귀</p>
-                                    <p class="text-xs text-slate-500">29번 곤돌라 타고 셀바 디 발가르데나 하행 -> S.da Nives 버스정류장에서 350, 358, 360번 버스 탑승 -> 몬테파나 주차장 컴백 -> 숙소 복귀</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Baita Odles (세체다 정상 부근):</strong> 콜레이저 상부 정류장 근처에 위치하며 멋진 오들러 산군을 조망하며 야외 테라스에서 파스타와 슈니첼을 즐길 수 있습니다.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Link -->
-                        <a href="https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" target="_blank" class="w-full py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs border border-slate-200 transition active:scale-95">
-                            <i data-lucide="info" class="w-3.5 h-3.5"></i> 실시간 발가르데나 케이블카 상태 확인
-                        </a>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/Santre+Dolomitic+Home/Streda+Raiser,+61,+39048+Santa+Cristina+Valgardena+BZ/Streda+Pana,+5,+39047+Santa+Cristina+Valgardena+BZ/Selva+Val+Gardena/Santre+Dolomitic+Home" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 동선 경로 보기
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-3" onblur="saveMemo(3)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="오전/오후 리프트 운행 시간 및 버스 시간표 메모..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 4 (7.14) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(4)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 4</span>
-                            <span class="font-bold text-slate-900">7.14 (월) 알페디시우시 & 숙소이동</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-4" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-4" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 09:00 숙소 체크아웃 & 출발</p>
-                                    <p class="text-xs text-slate-500">체크아웃 후 10:00 오르티세이 1번 곤돌라 주차장 도착 및 주차</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">알페디시우시 광활한 평원 진입</p>
-                                    <p class="text-xs text-slate-500">곤돌라 탑승 -> 알페디시우시 정상 -> 59번 Al Sole 리프트 타고 하행 -> 스포츠호텔 도착</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">티레스 & 파노라마 트레킹</p>
-                                    <p class="text-xs text-slate-500">살트리아 방향 도보 -> 65번 Florian 리프트 탑승 -> 윌리엄스 산장 -> 티레스 산장 -> Alpenhotel Panorama</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">하행 및 버스 환승 복귀</p>
-                                    <p class="text-xs text-slate-500">Panorama Sessellift 탑승 및 하향 -> Compatsch 버스정류장 -> 179번 버스 -> 172번 버스 갈아타고 오르티세이 복귀</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">5</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">두번째 거점 숙소 이동</p>
-                                    <p class="text-xs text-slate-500">오르티세이 주차장에서 차량 회수 -> POZZA DI FASSA에 있는 새로운 숙소 체크인</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Stay -->
-                        <div class="bg-amber-50 border border-amber-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-amber-900">숙소 (새로운 베이스캠프)</p>
-                            <p class="text-amber-800">DOLPMITI Exclusive Your Mountain Suite (7박 투숙)</p>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Rauch Hütte (알페디시우시 평원 내):</strong> 테라스에서 바라보는 사쏘룽고와 사쏘피아토의 전망이 완벽한 뷰 맛집. 남티롤 요리와 와인 셀렉션이 좋습니다.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Link -->
-                        <a href="https://www.dolomitisuperski.com/en/live-info/lifts/summer/seiser-alm" target="_blank" class="w-full py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs border border-slate-200 transition active:scale-95">
-                            <i data-lucide="info" class="w-3.5 h-3.5"></i> 실시간 시우시 리프트 상태 확인
-                        </a>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/Santre+Dolomitic+Home/Via+Setil,+9,+Ortisei/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 동선 경로 보기
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-4" onblur="saveMemo(4)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="179번, 172번 버스 시간 연동 정보 기록..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 5 (7.15) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(5)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 5</span>
-                            <span class="font-bold text-slate-900">7.15 (화) 참페디에 ~ 바요렛 트레킹</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-5" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-5" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 09:00 숙소 출발</p>
-                                    <p class="text-xs text-slate-500">Vigo di Fassa 탑승장으로 렌트카 이동</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">케이블카 탑승 & 참페디에</p>
-                                    <p class="text-xs text-slate-500">211번 Catenaccio Funivie 탑승하여 참페디에 산장 도착</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">가르데치아 & 바요렛 산장 트레킹</p>
-                                    <p class="text-xs text-slate-500">참페디에 -> Rifugio Gardeccia -> Rifugio Vajolet (독특하고 뾰족한 암벽 군락지 감상)</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">PERA 마을로 하행 및 숙소 복귀</p>
-                                    <p class="text-xs text-slate-500">역순으로 하행하여 PERA 마을 주차장으로 하산 -> 차량 회수 후 숙소 복귀</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Rifugio Gardeccia:</strong> 참페디에에서 바요렛으로 가는 평탄한 길목에 위치하며, 굴라쉬 스프와 시원한 맥주, 홈메이드 애플 슈트루델이 트레킹 피로를 풀어줍니다.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Link -->
-                        <a href="https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" target="_blank" class="w-full py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs border border-slate-200 transition active:scale-95">
-                            <i data-lucide="info" class="w-3.5 h-3.5"></i> 실시간 카테나치오/발가르데나 케이블카 상태 확인
-                        </a>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Str.+de+Col+de+M%C3%A8,+10,+38036+Sen+Jan+di+Fassa+TN/Rifugio+Gardeccia/Pera,+San+Giovanni+di+Fassa/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 동선 경로 보기
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-5" onblur="saveMemo(5)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="바요렛 산장까지 경사도가 있으니 등산 스틱 필수 지참..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 6 (7.16) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(6)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 6</span>
-                            <span class="font-bold text-slate-900">7.16 (수) 카레짜 호수 & 쾨니그 라우린 & 야크 벤치</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-6" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-6" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <p class="font-bold text-emerald-800 text-xs border-b pb-1">오전 일정: 카레짜 & 파올리나</p>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 09:00 숙소 출발</p>
-                                    <p class="text-xs text-slate-500">Carezza 호수 주차장에 주차 후 신비로운 에메랄드빛 호수 둘러보기</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">파올리나 리프트 & 549번길 트레킹</p>
-                                    <p class="text-xs text-slate-500">Seggiovia Paolina 주차장으로 이동 -> 리프트 타고 파올리나 산장(Paolina Hütte) -> 549번길 -> 독수리 동상(Aquila di Christomannos) -> 545번길 -> 로다 디 바엘(Roda di Vaèl) 산장 -> 원점 회귀</p>
-                                </div>
-                            </div>
-                            
-                            <p class="font-bold text-emerald-800 text-xs border-b pt-2 pb-1">오후 일정: 프리드리히 아우구스트 길</p>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">캄피텔로 디 파사 이동 및 콜 로델라 탑승</p>
-                                    <p class="text-xs text-slate-500">152번 Funivia Campitello - Col Rodella 리프트 타고 하차</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">야크플레이스 벤치 & 시그니처 크라펜</p>
-                                    <p class="text-xs text-slate-500">Des Alpes 산장 시작 -> 'The Yak Place 벤치' 포토존 촬영 -> 프리드리히 아우구스트 산장에서 도넛 '크라펜' & 커피 브레이크</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">5</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">사쏘피아토 산장 왕복</p>
-                                    <p class="text-xs text-slate-500">산드로 페르티니 산장 경유 -> 사쏘피아토 산장까지 대자연 트레킹 후 역순 복귀 -> 숙소 컴백</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Rifugio Roda di Vaèl:</strong> 트레킹 반환점인 산장에서 장엄한 카테나치오 산맥을 배경으로 남티롤 치즈 플레이트 및 카네델리(Kanedeli) 파스타 추천.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Link -->
-                        <a href="https://www.dolomitisuperski.com/en/live-info/lifts/summer/carezza" target="_blank" class="w-full py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs border border-slate-200 transition active:scale-95">
-                            <i data-lucide="info" class="w-3.5 h-3.5"></i> 실시간 카레짜 리프트 상태 확인
-                        </a>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Lago+di+Carezza/Seggiovia+Paolina/Campitello+di+Fassa/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 전체 이동 동선 확인
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-6" onblur="saveMemo(6)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="오전에 카레짜, 오후에 콜로델라 2개의 리프트를 정복하는 바쁜 일정이므로 시간 조절 잘할 것..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 7 (7.17) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(7)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 7</span>
-                            <span class="font-bold text-slate-900">7.17 (목) 사쏘포르도이 & 사쏘룽고 & QC스파</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-7" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-7" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 09:00 숙소 출발</p>
-                                    <p class="text-xs text-slate-500">포르도이 패스 주차장(Parking Passo Pordoi) 이동</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">돌로미티의 테라스 (Sass Pordoi)</p>
-                                    <p class="text-xs text-slate-500">103번 Funivia Sass Pordoi 케이블카 타고 올라가서 감상 후 피츠 포에(Piz Boè) 방향 트레킹 후 하향</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">사쏘룽고 2인 스탠딩 케이블카</p>
-                                    <p class="text-xs text-slate-500">사쏘룽고 주차장으로 차량 이동 -> In Sella 카페에서 커피 타임 -> 명물 '관짝 케이블카' 탑승 -> 토니 데메츠 산장(Rifugio Toni Demetz Hütte) 정상 풍경 관람 후 원점 회귀 하향</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">저녁: QC Terme 스파 & 힐링</p>
-                                    <p class="text-xs text-slate-500">숙소에서 휴식 후 저녁에 최고급 온천 시설인 QC Terme Pozza di Fassa에서 온천욕으로 피로 해소</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Rifugio Maria (사쏘포르도이 정상):</strong> 2,950m 절벽 끝에 위치해 '구름 위에서의 식사'를 선사합니다. 환상적인 전경을 보며 현지 파스타와 맥주를 맛보세요.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Links -->
-                        <div class="grid grid-cols-2 gap-2">
-                            <a href="https://www.dolomitisuperski.com/en/live-info/lifts/val-di-fassa-carezza" target="_blank" class="py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl text-center text-[11px] border border-slate-200 transition active:scale-95">
-                                실시간 포르도이 리프트
-                            </a>
-                            <a href="https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" target="_blank" class="py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl text-center text-[11px] border border-slate-200 transition active:scale-95">
-                                실시간 사쏘룽고 리프트
-                            </a>
-                        </div>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Passo+Pordoi/Passo+Sella/QC+Terme+Dolomiti/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 전체 이동 동선 확인
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-7" onblur="saveMemo(7)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="QC Terme 온천 입장권 예매 정보 및 준비물(수영복) 메모..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 8 (7.18) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(8)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 8</span>
-                            <span class="font-bold text-slate-900">7.18 (금) 마르몰라다 만년설 & 비엘달판</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-8" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-8" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <p class="font-bold text-emerald-800 text-xs border-b pb-1">오전 일정: 최고봉 마르몰라다 (Marmolada)</p>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 09:00 숙소 출발</p>
-                                    <p class="text-xs text-slate-500">마르몰라다 케이블카 역 주차장(Malga Ciapela)에 주차</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">3단계 케이블카 정복</p>
-                                    <p class="text-xs text-slate-500">Malga-Banc -> Banc-Serauta(전쟁박물관 관람) -> Serauta-P.Rocca 탑승하여 테라짜 마르몰라다 도착 (3,265m 만년설과 압도적 고도감 감상) -> 역순 하향</p>
-                                </div>
-                            </div>
-
-                            <p class="font-bold text-emerald-800 text-xs border-b pt-2 pb-1">오후 일정: 비엘달판 (Viel del Pan) 인생 트레킹</p>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">Alba 마을 이동 및 케이블카 탑승</p>
-                                    <p class="text-xs text-slate-500">Parcheggio Funivia Doleda 주차 -> 130번 Funivia Alba - Col dei Rossi 타고 콜데로시 전망대 등반</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">비엘달판 길 (601번 트레일) 걷기</p>
-                                    <p class="text-xs text-slate-500">Col dei Rossi 뷰포인트 -> Chalet Belvedere -> 프레다롤라 산장 -> 비엘달판 산장(Rifugio Viel dal Pan)까지 평행선 꽃길 트레킹 -> 역방향으로 곤돌라 하행하여 숙소 복귀</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Rifugio Viel del Pan:</strong> 마르몰라다 빙하와 페다이아 호수의 극적인 전망을 한눈에 보며 점심 식사를 할 수 있는 곳입니다. 스파게티 요리가 인기 있습니다.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Links -->
-                        <div class="grid grid-cols-2 gap-2">
-                            <a href="https://www.dolomitisuperski.com/en/live-info/lifts/arabba-marmolada" target="_blank" class="py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl text-center text-[11px] border border-slate-200 transition active:scale-95">
-                                실시간 마르몰라다 리프트
-                            </a>
-                            <a href="https://www.dolomitisuperski.com/en/live-info/lifts/val-di-fassa-carezza" target="_blank" class="py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl text-center text-[11px] border border-slate-200 transition active:scale-95">
-                                실시간 파사(Alba) 리프트
-                            </a>
-                        </div>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Malga+Ciapela/Alba,+San+Giovanni+di+Fassa/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 전체 이동 동선 확인
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-8" onblur="saveMemo(8)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="마르몰라다 정상(3,200m+)은 한여름에도 패딩이 필요할 만큼 매우 추우므로 바람막이/경량패딩 챙길 것..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 9 (7.19) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(9)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 9</span>
-                            <span class="font-bold text-slate-900">7.19 (토) 피츠 아를라라 ~ 프랄롱지아</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-9" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-9" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 09:00 숙소 출발</p>
-                                    <p class="text-xs text-slate-500">코르바라 Col Alt 곤돌라 승강장으로 이동 및 주차</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">아르타 고원 트레킹</p>
-                                    <p class="text-xs text-slate-500">1번 COL ALTO 곤돌라 탑승 -> 23B/23번 트레일 하이킹 -> 피츠 아를라라(Piz Arlara) 산장 -> 비오크(Bioch) 산장 -> 프랄롱지아(Pralongia) 산장 투어</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-amber-500 border border-amber-500 bg-white">★</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-amber-600">시간 여유 시 예비 일정 (라 크루스)</p>
-                                    <p class="text-xs text-slate-500">Badia 마을로 이동하여 61번 La Crusc 리프트 탑승 -> 아름다운 아르멘타롤라 초원 힐링 산책 후 숙소 복귀</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Rifugio Bioch (비오크 산장):</strong> 파스타와 현지 수제 디저트가 일품이며, 360도 완벽한 돌로미티 고원 파노라마를 자랑합니다.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Link -->
-                        <a href="https://www.dolomitisuperski.com/en/live-info/lifts/alta-badia" target="_blank" class="w-full py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs border border-slate-200 transition active:scale-95">
-                            <i data-lucide="info" class="w-3.5 h-3.5"></i> 실시간 알타 바디아 리프트 상태 확인
-                        </a>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Umlaufbahn+Col+Alt/Badia/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 전체 이동 동선 확인
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-9" onblur="saveMemo(9)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="피츠 아를라라 고원길은 그늘이 없으니 모자 및 선크림 필수..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 10 (7.20) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(10)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 10</span>
-                            <span class="font-bold text-slate-900">7.20 (월) 라시에사 푸니쿨라레 & 단테르체피에스</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-10" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-10" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <p class="font-bold text-emerald-800 text-xs border-b pb-1">오전 일정: 오르티세이 라시에사 (Raschötz)</p>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 08:00 숙소 출발</p>
-                                    <p class="text-xs text-slate-500">오르티세이 세체다 주차장(S.da Val d'Anna, 2)에 주차 후 도보로 Seilbahn Raschötz 승강장 이동</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">푸니쿨라레 탑승 & 트레킹</p>
-                                    <p class="text-xs text-slate-500">Funicolare Resciesa를 타고 정상 등반 -> 라시에사 산장 -> Cappella Santa Croce 야외 십자가 예배당 방문 (크게 한 바퀴 원형 트레킹) -> 푸니쿨라레 하행</p>
-                                </div>
-                            </div>
-
-                            <p class="font-bold text-emerald-800 text-xs border-b pt-2 pb-1">오후 일정: 단테르체피에스 (Dantercepies)</p>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">셀바 마을 차량 이동 및 케이블카 탑승</p>
-                                    <p class="text-xs text-slate-500">셀바 Dantercepies 주차장에 주차 -> 케이블카 탑승하여 상부역(Dantercepies Bergstation) 도착 -> 환상적인 가르데나 패스와 피츠보에 뷰 조망</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">셀바 마을 도보 관광</p>
-                                    <p class="text-xs text-slate-500">케이블카 타고 내려와 예쁜 셀바(Selva) 마을 구경 후 숙소 컴백</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Raschötz Hütte (라시에사 산장):</strong> 푸니쿨라레 정상 역 근처에서 평화로운 가축들과 푸른 초원을 감상하며 먹는 든든한 티롤식 보울 라이스 요리와 홈메이드 수프를 추천합니다.
-                            </p>
-                        </div>
-
-                        <!-- Dynamic Cable Car Info Link -->
-                        <a href="https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" target="_blank" class="w-full py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl flex items-center justify-center gap-2 text-xs border border-slate-200 transition active:scale-95">
-                            <i data-lucide="info" class="w-3.5 h-3.5"></i> 실시간 발가르데나/라시에사 리프트 상태 확인
-                        </a>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Seceda+Parking/Dantercepies+Cable+Car/DOLOMITI+Exclusive+Your+Mountain+Suite" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 전체 이동 동선 확인
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-10" onblur="saveMemo(10)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="단테르체피에스 정상에서 바람이 많이 불 수 있으니 겉옷 챙기기..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 11 (7.21) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(11)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 11</span>
-                            <span class="font-bold text-slate-900">7.21 (화) 볼차노 관광 & 밀라노 복귀</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-11" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-11" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3">
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오전 08:00 숙소 체크아웃 & 출발</p>
-                                    <p class="text-xs text-slate-500">볼차노(Bolzano) 시내로 이동</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">볼차노 시내 주차 및 쾌속 관광</p>
-                                    <p class="text-xs text-slate-500">추천 주차장 중 택일하여 주차</p>
-                                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100 text-xs space-y-1">
-                                        <p class="font-semibold text-slate-700">🅿️ 추천 주차장 후보:</p>
-                                        <p class="text-slate-600">• Walther Square Parking (광장 지하 최적)</p>
-                                        <p class="text-slate-600">• Parking Bolzano Centro (여유롭고 편리)</p>
-                                    </div>
-                                    <p class="text-xs text-slate-600 mt-1">도보로 발터광장(Waltherplatz), 볼차노대성당, 아기자기한 상점이 모여있는 포르티치 거리(Portici) 신속 구경</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">밀라노 말펜사 공항 복귀 & 반납 전 주유</p>
-                                    <p class="text-xs text-slate-500">밀라노를 향해 이동하며 말펜사 공항 반납 전 정식 주유소에서 Full 주유 완료</p>
-                                    <div class="bg-emerald-50 p-2 rounded-lg border border-emerald-100 text-xs">
-                                        <p class="font-semibold text-emerald-800">⛽ 최적 주유소 추천 (반납 5분전):</p>
-                                        <p class="text-slate-700"><strong>Eni Station (Malpensa T1 근처):</strong> 공항 진입 전 완벽한 풀 주유가 가능하고 바가지 요금이 적은 정식 대형 브랜드 주유소입니다.</p>
-                                        <p class="text-[10px] text-slate-500">(주소: SS336 km 7, 21010 Cardano al Campo VA, 이탈리아)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="bg-emerald-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">4</span>
-                                <div class="space-y-0.5">
-                                    <p class="font-bold text-slate-800">오후 17:00 렌트카 최종 반납</p>
-                                    <p class="text-xs text-slate-500">밀라노 말펜사 공항 렌트카 반납 구역에 무사 차량 반납 완료</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Stay -->
-                        <div class="bg-amber-50 border border-amber-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-amber-900">마지막 날 숙소</p>
-                            <p class="text-amber-800">쉐라톤 밀란 말펜사 에어포트 호텔 & 컨퍼런스센터</p>
-                            <p class="text-[10px] text-amber-600 mt-0.5">※ 익일 새벽 6시 45분 비행기이므로 공항 연결 호텔이 최고의 선택입니다.</p>
-                        </div>
-
-                        <!-- Lunch Recommendation -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs">
-                            <p class="font-bold text-emerald-800 flex items-center gap-1">
-                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 추천 점심 장소
-                            </p>
-                            <p class="text-slate-700 mt-1">
-                                <strong>Ristorante Wirtshaus Vögele (Bolzano):</strong> 볼차노 시내의 역사적인 맛집. 남티롤 전통 요리와 이탈리아 정통 파스타를 조화롭게 선보입니다.
-                            </p>
-                        </div>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Piazza+Walther,+Bolzano/Eni+Cardano+al+Campo/Sheraton+Milan+Malpensa+Airport+Hotel" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 전체 복귀 경로 확인
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-11" onblur="saveMemo(11)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="차량 반납 시 외관 사진 및 동영상 촬영 필수 기록, 주유 영수증 보관하기..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day 12 (7.22) -->
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="bg-slate-50 p-4 flex justify-between items-center cursor-pointer border-b border-slate-100" onclick="toggleDay(12)">
-                        <div>
-                            <span class="text-[10px] bg-slate-200 text-slate-600 font-bold px-2 py-0.5 rounded-full mr-2">DAY 12</span>
-                            <span class="font-bold text-slate-900">7.22 (수) 귀국편 탑승</span>
-                        </div>
-                        <i data-lucide="chevron-down" id="arrow-12" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
-                    </div>
-                    <div id="content-12" class="p-4 space-y-4 text-sm hidden">
-                        <div class="space-y-3 border-l-2 border-red-500 pl-3 text-xs">
-                            <div class="flex items-start gap-1.5">
-                                <span class="bg-red-100 text-red-800 text-[10px] font-bold px-1.5 py-0.5 rounded mt-0.5">출발</span>
-                                <div>
-                                    <p class="font-bold">AF1131 (밀라노MXP -> 파리CDG)</p>
-                                    <p class="text-slate-500">06:45 출발 (밀라노 말펜사) -> 파리 CDG 2F 도착</p>
-                                    <p class="text-[10px] text-amber-600 font-semibold">※ 새벽 출발이므로 호텔에서 체크아웃 및 탑승 수속을 서둘러 주세요!</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-1.5 mt-2">
-                                <span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-1.5 py-0.5 rounded mt-0.5">환승</span>
-                                <div>
-                                    <p class="font-bold">AF0264 (파리CDG -> 인천T2)</p>
-                                    <p class="text-slate-500">14:40 출발 (CDG 2E) -> 7.23(목) 오전 09:35 인천 도착</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Google Maps Route Button -->
-                        <a href="https://www.google.com/maps/dir/Sheraton+Milan+Malpensa+Airport/Paris+Charles+de+Gaulle+Airport/인천국제공항+제2여객터미널" target="_blank" class="w-full py-2.5 px-4 bg-emerald-50 text-emerald-700 font-bold rounded-xl flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                            <i data-lucide="map" class="w-4 h-4"></i> 구글 지도에서 복귀 비행 경로 보기
-                        </a>
-
-                        <!-- Memo Section -->
-                        <div class="mt-4 pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-500 mb-1">나의 메모</label>
-                            <textarea id="memo-12" onblur="saveMemo(12)" class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="파리 텍스리펀 절차 및 환승 게이트 무빙 루트 기록..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Days Accordion Container -->
+            <div id="days-container" class="space-y-3">
+                <!-- Days will be dynamically generated by JS -->
             </div>
         </section>
 
-        <!-- [TAB 2: CHECKLIST] -->
-        <section id="tab-checklist" class="tab-content hidden space-y-4">
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-slate-900 flex items-center gap-2">
-                        <i data-lucide="check-square" class="text-emerald-600"></i> 필수 체크리스트
-                    </h2>
-                    <span id="checklist-counter" class="text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full font-bold">0 / 0</span>
-                </div>
+        <!-- PAGE 2: CHECKLIST -->
+        <section id="page-checklist" class="app-page hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-teal-400 rounded-full inline-block"></span>
+                    여행 체크리스트
+                </h2>
+            </div>
 
-                <!-- Add item Form -->
+            <!-- Checklist Add Form -->
+            <form id="checklist-form" class="bg-white p-4 rounded-2xl border border-teal-100 shadow-sm mb-4">
                 <div class="flex gap-2">
-                    <input type="text" id="new-todo-input" placeholder="새 준비물을 입력하세요..." class="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-1 focus:ring-emerald-500 focus:outline-none">
-                    <button onclick="addTodoItem()" class="px-4 py-2 bg-emerald-700 text-white font-bold text-xs rounded-xl hover:bg-emerald-800 transition active:scale-95">추가</button>
+                    <input type="text" id="checklist-input" placeholder="준비물이나 할 일을 입력하세요..." class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                    <button type="submit" class="bg-teal-400 hover:bg-teal-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> 추가
+                    </button>
                 </div>
+            </form>
 
-                <!-- List of items -->
-                <div id="todo-list" class="space-y-2 max-h-[350px] overflow-y-auto pr-1">
-                    <!-- Dynamic rendering -->
+            <!-- Checklist List -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                <div class="flex justify-between items-center mb-3 text-xs text-slate-500 font-bold border-b pb-2">
+                    <span id="checklist-progress">진행도: 0/0 (0%)</span>
+                    <button onclick="clearCompletedChecklist()" class="text-rose-500 hover:underline">완료 항목 삭제</button>
                 </div>
+                <ul id="checklist-ul" class="space-y-3 divide-y divide-slate-50 divide-dashed">
+                    <!-- Dynamic Checklist items -->
+                </ul>
             </div>
         </section>
 
-        <!-- [TAB 3: BUDGET] -->
-        <section id="tab-budget" class="tab-content hidden space-y-4">
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-slate-900 flex items-center gap-2">
-                        <i data-lucide="coins" class="text-emerald-600"></i> 공동 경비 & 예산 관리
-                    </h2>
-                    <span class="text-[11px] text-slate-400">환율 1€ = 1,750원 고정</span>
-                </div>
+        <!-- PAGE 3: BUDGET -->
+        <section id="page-budget" class="app-page hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-emerald-400 rounded-full inline-block"></span>
+                    여행 예산 관리
+                </h2>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">환율: €1 = 1,750원</span>
+            </div>
 
-                <!-- Total summary card -->
-                <div class="bg-slate-900 text-white p-4 rounded-xl space-y-2">
-                    <p class="text-xs text-slate-400">총 지출 누계액</p>
-                    <div class="flex justify-between items-end">
-                        <span id="total-krw" class="text-xl font-bold text-emerald-400">₩0</span>
-                        <span id="total-eur" class="text-sm font-medium text-slate-300">€0.00</span>
+            <!-- Budget Input Form -->
+            <form id="budget-form" class="bg-white p-4 rounded-2xl border border-emerald-100 shadow-sm mb-4 space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1 font-bold">항목명</label>
+                        <input type="text" id="budget-title" placeholder="예: 첫날 점심식사" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1 font-bold">구분</label>
+                        <select id="budget-category" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                            <option value="식비">🍔 식비</option>
+                            <option value="교통/주유">🚗 교통/주유</option>
+                            <option value="액티비티">🚠 액티비티/케이블카</option>
+                            <option value="숙박">🏨 숙박</option>
+                            <option value="기타">🛍️ 기타</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Add budget form -->
-                <div class="bg-slate-50 p-3 rounded-xl space-y-3 border border-slate-100">
-                    <p class="text-xs font-bold text-slate-700">새 예산 지출 등록</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="budget-title" placeholder="내용 (예: 점심식사, 주유비)" class="col-span-2 px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                        <input type="number" id="budget-amount" placeholder="금액" class="px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                        <select id="budget-currency" class="px-3 py-2 text-xs border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <div class="grid grid-cols-3 gap-2 items-end">
+                    <div class="col-span-2">
+                        <label class="block text-xs text-slate-500 mb-1 font-bold">금액 입력</label>
+                        <input type="number" id="budget-amount" placeholder="숫자만 입력" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1 font-bold">통화</label>
+                        <select id="budget-currency" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
                             <option value="EUR">EUR (€)</option>
                             <option value="KRW">KRW (₩)</option>
                         </select>
                     </div>
-                    <button onclick="addBudgetItem()" class="w-full py-2 bg-emerald-700 text-white text-xs font-bold rounded-lg hover:bg-emerald-800 transition active:scale-95">예산 기록 추가</button>
                 </div>
 
-                <!-- Budget List -->
-                <div class="space-y-2">
-                    <p class="text-xs font-bold text-slate-500">지출 목록</p>
-                    <div id="budget-list" class="space-y-2 max-h-[250px] overflow-y-auto pr-1">
-                        <!-- Dynamic rendering -->
-                    </div>
+                <button type="submit" class="w-full bg-emerald-400 hover:bg-emerald-500 text-white py-2 rounded-xl text-xs font-bold transition-all flex justify-center items-center gap-1">
+                    <i class="fa-solid fa-plus"></i> 예산 항목 추가
+                </button>
+            </form>
+
+            <!-- Total Budget Summary -->
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-2xl p-4 shadow-md mb-4 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-white/80 font-bold">총 합산 금액 (원화 환산)</p>
+                    <p class="text-2xl font-black" id="total-krw">0 원</p>
+                </div>
+                <div class="text-right border-l border-white/20 pl-4">
+                    <p class="text-xs text-white/80 font-bold">유로화 합계</p>
+                    <p class="text-lg font-bold" id="total-eur">€ 0</p>
+                </div>
+            </div>
+
+            <!-- Budget List Table -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-3 overflow-hidden">
+                <p class="text-xs font-bold text-slate-700 mb-2">세부 지출 목록</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 text-[11px] text-slate-400 font-bold">
+                                <th class="pb-2">구분</th>
+                                <th class="pb-2">항목명</th>
+                                <th class="pb-2 text-right">입력금액</th>
+                                <th class="pb-2 text-right">원화환산(₩)</th>
+                                <th class="pb-2 text-center">삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody id="budget-tbody" class="divide-y divide-slate-50 text-xs">
+                            <!-- Dynamic Budget Rows -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- Navigation Bar at Bottom -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 shadow-xl z-50">
-        <div class="max-w-md mx-auto grid grid-cols-3 py-2">
-            <button onclick="switchTab('itinerary')" id="nav-itinerary" class="flex flex-col items-center gap-1 text-emerald-700">
-                <i data-lucide="mountain-snow" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">상세 일정</span>
-            </button>
-            <button onclick="switchTab('checklist')" id="nav-checklist" class="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-700 transition">
-                <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">체크리스트</span>
-            </button>
-            <button onclick="switchTab('budget')" id="nav-budget" class="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-700 transition">
-                <i data-lucide="wallet" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">가계부/예산</span>
-            </button>
-        </div>
+    <!-- Navigation Bar (Bottom) -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-slate-100 flex justify-around py-3 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50">
+        <button id="btn-itinerary" onclick="switchPage('itinerary')" class="flex flex-col items-center gap-1 text-blue-500 font-bold transition-all">
+            <i class="fa-solid fa-route text-lg"></i>
+            <span class="text-[10px]">여행계획</span>
+        </button>
+        <button id="btn-checklist" onclick="switchPage('checklist')" class="flex flex-col items-center gap-1 text-slate-400 font-medium transition-all">
+            <i class="fa-solid fa-list-check text-lg"></i>
+            <span class="text-[10px]">체크리스트</span>
+        </button>
+        <button id="btn-budget" onclick="switchPage('budget')" class="flex flex-col items-center gap-1 text-slate-400 font-medium transition-all">
+            <i class="fa-solid fa-wallet text-lg"></i>
+            <span class="text-[10px]">예산관리</span>
+        </button>
     </nav>
 
-    <!-- Scripting for interactivity & state management -->
+    <!-- Custom Modal for adding/editing memos -->
+    <div id="memo-modal" class="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-slate-800" id="memo-modal-title">일정 메모</h3>
+                <button onclick="closeMemoModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <input type="hidden" id="memo-day-index">
+            <input type="hidden" id="memo-item-index">
+            <textarea id="memo-textarea" rows="4" class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="메모할 내용을 적어주세요..."></textarea>
+            <div class="flex gap-2">
+                <button onclick="deleteMemo()" id="btn-memo-delete" class="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-500 py-2.5 rounded-xl text-sm font-bold transition-all hidden">삭제</button>
+                <button onclick="saveMemo()" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl text-sm font-bold transition-all">저장하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Logic Script -->
     <script>
-        // Exchange Rate definition (1 EUR = 1750 KRW)
-        const EXC_RATE = 1750;
+        // Exchange Rate constant
+        const EXCHANGE_RATE = 1750;
 
-        // In-Memory state with fallback data initialization
-        let state = {
-            memos: {},
-            todos: [
-                { id: 1, text: "여권 및 여권 사본 준비", completed: true },
-                { id: 2, text: "이탈리아 유심 또는 이심(eSIM) 구매", completed: false },
-                { id: 3, text: "국제운전면허증 및 한국면허증 지참", completed: true },
-                { id: 4, text: "동전 지갑 및 소량의 유로화 현금 준비", completed: false },
-                { id: 5, text: "등산화, 무릎 보호대, 등산스틱 패킹", completed: false },
-                { id: 6, text: "경량 패딩 및 바람막이 (마르몰라다 대비)", completed: false },
-                { id: 7, text: "스파용 수영복 및 방수팩 준비 (QC Terme용)", completed: false }
-            ],
-            budget: [
-                { id: 1, title: "7.11 쉐라톤 MXP 호텔 (예약완료)", amount: 160, currency: "EUR" },
-                { id: 2, title: "렌트카 11일 대여료 (예약완료)", amount: 550, currency: "EUR" },
-                { id: 3, title: "세체다 리프트 2인 티켓", amount: 84, currency: "EUR" },
-                { id: 4, title: "QC Terme 온천 2인 입장권", amount: 110, currency: "EUR" }
-            ]
-        };
+        // Default Checklist Pre-load
+        const defaultChecklist = [
+            { id: 1, text: "여권 및 신분증, 항공권 e-티켓", done: true },
+            { id: 2, text: "국제운전면허증 + 영문운전면허증 + 한국면허증", done: true },
+            { id: 3, text: "신용카드 (해외 사용 가능, 렌트카 보증용 본인명의)", done: false },
+            { id: 4, text: "돌로미티 트레킹화 및 등산복 세트", done: false },
+            { id: 5, text: "선글라스, 선크림, 모자 필수 지참", done: false },
+            { id: 6, text: "변환 어댑터 및 휴대폰 충전기", done: false },
+            { id: 7, text: "유럽 유심/eSIM 구매 및 활성화", done: false },
+            { id: 8, text: "경량 패딩 또는 윈드브레이커 (산 정상 대비)", done: false }
+        ];
 
-        // Load data from LocalStorage if exists
-        function loadState() {
-            const saved = localStorage.getItem('dolomiti_travel_state');
-            if (saved) {
-                try {
-                    state = JSON.parse(saved);
-                } catch (e) {
-                    console.error("실패: 저장 데이터를 불러올 수 없습니다.", e);
-                }
+        // Default Budgets Pre-load
+        const defaultBudgets = [
+            { id: 1, title: "밀라노 렌트카 예약", category: "교통/주유", amount: 800, currency: "EUR" },
+            { id: 2, title: "Santre Dolomitic Home 숙소", category: "숙박", amount: 650, currency: "EUR" },
+            { id: 3, title: "DOLOMITI Exclusive Suite", category: "숙박", amount: 1800, currency: "EUR" },
+            { id: 4, title: "세체다 케이블카 2인", category: "액티비티", amount: 90, currency: "EUR" },
+            { id: 5, title: "알페디시우시 리프트 2인", category: "액티비티", amount: 84, currency: "EUR" }
+        ];
+
+        // Comprehensive Dolomiti 12-Day Travel Schedule
+        const travelData = [
+            {
+                day: 1,
+                date: "2026.07.11 (토)",
+                title: "인천 출발 및 밀라노 도착",
+                hotel: "쉐라톤 밀란 말펜사 에어포트 호텔 & 컨퍼런스센터",
+                lunch: "인천공항 내 식당 혹은 기내식 이용",
+                routeUrl: "https://www.google.com/maps/dir/Incheon+International+Airport+(ICN),+Gonghang-ro,+Jung-gu,+Incheon/Milan+Malpensa+Airport+(MXP),+Fernno,+VA,+Italy/@47.4578051,19.3496669,4z/",
+                memos: ["오전 11시 40분 AF0267편 인천 T2 출발", "18시 40분 파리 CDG 도착 후 21시 30분 AF1130편 출발", "23시 00분 밀라노 말펜사 공항 도착 후 쉐라톤 호텔 도보 체크인"],
+                timeline: [
+                    { time: "08:40", desc: "인천공항 제2여객터미널 미팅 및 수하물 위탁 (AF0267)" },
+                    { time: "11:40", desc: "인천공항 출발 ✈️ 파리 샤를드골 공항으로 비행" },
+                    { time: "18:40", desc: "파리 샤를드골(CDG) 공항 2E 터미널 도착 및 환승 수속" },
+                    { time: "21:30", desc: "파리 CDG 2F 터미널 출발 ✈️ 밀라노 말펜사로 이동 (AF1130)" },
+                    { time: "23:00", desc: "밀라노 말펜사 공항(MXP) 도착 및 수하물 수령" },
+                    { time: "23:45", desc: "🏨 쉐라톤 밀란 말펜사 에어포트 호텔 체크인 및 휴식" }
+                ],
+                lifts: []
+            },
+            {
+                day: 2,
+                date: "2026.07.12 (일)",
+                title: "렌트카 픽업 및 브레사노네 이동",
+                hotel: "Santre Dolomitic Home (Brixen)",
+                lunch: "휴게소 Paganella Est (간단한 파스타 및 파니니 추천)",
+                routeUrl: "https://www.google.com/maps/dir/Sheraton+Milan+Malpensa+Airport+Hotel+%26+Conference+Centre/Area+di+Servizio+Paganella+Est/Bressanone/Santre+Dolomythic+Home/@45.9229093,9.5855799,8z/",
+                memos: ["밀라노 말펜사 공항 렌트카 픽업", "Area di Servizio Paganella Est 휴게소 1회 정차", "브레사노네 관광 전용 주차장: Parcheggio Priel (이동 및 도보 접근성 최적)"],
+                timeline: [
+                    { time: "10:30", desc: "체크아웃 후 밀라노 말펜사 공항 렌트카 카운터 이동" },
+                    { time: "11:00", desc: "🚗 렌트카 픽업 (차량 상태 및 자차 보험 등 꼼꼼한 확인 필수)" },
+                    { time: "11:30", desc: "밀라노 출발 -> 고속도로 이용 최단거리 동선 출발" },
+                    { time: "14:00", desc: "☕ Area di Servizio Paganella Est 휴게소 정차 및 간단한 점심" },
+                    { time: "16:00", desc: "📍 브레사노네(Bressanone) 도착 및 Parcheggio Priel 주차" },
+                    { time: "16:15", desc: "브레사노네 구시가지 산책 (웅장한 성당 및 파스텔톤 거리 둘러보기)" },
+                    { time: "18:00", desc: "🏨 Santre Dolomitic Home 숙소 체크인 및 호텔 석식 코스 감상" }
+                ],
+                lifts: []
+            },
+            {
+                day: 3,
+                date: "2026.07.13 (월)",
+                title: "세체다 & 참피노이 트레킹",
+                hotel: "Santre Dolomitic Home (Brixen)",
+                lunch: "Almhotel Col Raiser 산장 (돌로미티 수제 맥주와 슈니첼 추천)",
+                routeUrl: "https://www.google.com/maps/dir/Santre+Dolomythic+Home/Parcheggio+Col+Raiser/Monte+Pana/Santre+Dolomythic+Home/@46.6027372,11.5303792,11z/",
+                memos: ["세체다 산 정상에서 가르데나 계곡 감상하기", "참피노이에서 버스로 돌아올 때 350번/360번 버스 시간표 사전 체크"],
+                timeline: [
+                    { time: "08:00", desc: "숙소(Santre)에서 출발 및 Parcheggio Col Raiser 이동" },
+                    { time: "08:45", desc: "① Parcheggio Col Raiser 도착 및 주차" },
+                    { time: "09:00", desc: "② Col Raiser 케이블카 탑승 후 ③ Almhotel Col Raiser 도착" },
+                    { time: "09:30", desc: "④ Fermedes -> ⑤ Arrivo Seggiovia Fermeda 트레킹" },
+                    { time: "11:00", desc: "⑥ Panorama Seceda 절경 감상 및 트레킹" },
+                    { time: "13:00", desc: "Col Raiser 주차장으로 역순 하강 후 참피노이 이동" },
+                    { time: "13:45", desc: "⑦ Seggiovia Monte Pana - Mont de Seura 이동 및 주차" },
+                    { time: "14:00", desc: "⑧ Mont de Sëura 리프트 탑승 및 ⑨ Bergstation Ciampinoi 통과" },
+                    { time: "15:00", desc: "⑩ Funivie Ciampinoi 관광 후 S.da Nives, 288 정류장 이동" },
+                    { time: "16:15", desc: "⑪ 350번 혹은 360번 버스 타고 출발 주차장 복귀" },
+                    { time: "17:30", desc: "🚗 렌트카 탑승 및 숙소 Santre 복귀" }
+                ],
+                lifts: [
+                    { name: "세체다/콜라이저 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" }
+                ]
+            },
+            {
+                day: 4,
+                date: "2026.07.14 (화)",
+                title: "알페디 시우시 트레킹 및 숙소 이동",
+                hotel: "DOLPMITI Exclusive Your Mountain Suite (Pozza di Fassa)",
+                lunch: "wild o'williams 산장 (카이저슈마른 디저트와 치즈 플레이트)",
+                routeUrl: "https://www.google.com/maps/dir/Santre+Dolomythic+Home/Funivie+Ortisei+-+Alpe+di+Siusi/DOLOMITI+Exclusive+Your+Mountain+Suite/@46.5456424,11.5034177,11z/",
+                memos: ["알페디 시우시 지역은 대중교통 연계가 많아 버스 환승 시간 준수 요망", "Kastelruth 172번 버스 갈아타는 곳 사전 확인"],
+                timeline: [
+                    { time: "09:00", desc: "체크아웃 후 숙소 Santre 출발" },
+                    { time: "10:00", desc: "① 오르티세이 Funivie Ortisei - Alpe di Siusi 주차" },
+                    { time: "10:15", desc: "② Telecabina Ortisei - Alpe di Siusi 탑승 후 Sonne 리프트 연계" },
+                    { time: "11:00", desc: "③ Sonne -> ④ Al Sole -> ⑤ Ludy Talstation -> ⑥ Saltria 하이킹" },
+                    { time: "12:00", desc: "⑦ Florian 리프트 탑승하여 ⑧ wild o’williams 도착 후 점심" },
+                    { time: "13:15", desc: "⑨ Passo Duron -> ⑩ Forcella Denti di Terrarossa -> ⑪ Rifugio Alpe di Tires 트레킹" },
+                    { time: "15:00", desc: "⑫ Alpe di Siusi Alpenhotel Panorama 및 ⑬ Panorama 리프트 이용" },
+                    { time: "16:15", desc: "⑭ Compatsch 역에서 179번 버스 탑승" },
+                    { time: "16:45", desc: "⑮ Kastelruth 역에서 172번 버스 환승 후 Ortisei 주차장 컴백" },
+                    { time: "17:45", desc: "🚗 Pozza di Fassa에 있는 신규 숙소로 이동" },
+                    { time: "19:00", desc: "🏨 DOLPMITI Exclusive Your Mountain Suite 체크인" }
+                ],
+                lifts: [
+                    { name: "알페디시우시 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/summer/seiser-alm" }
+                ]
+            },
+            {
+                day: 5,
+                date: "2026.07.15 (수)",
+                title: "로젠가르덴 바욜렛 산장 정복",
+                hotel: "DOLPMITI Exclusive Your Mountain Suite",
+                lunch: "Rifugio Gardeccia (폴렌타와 이탈리아 전통 소시지 요리 추천)",
+                routeUrl: "https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Funivia+Vigo-Catinaccio,+Vigo+di+Fassa/Rifugio+Vajolet/DOLOMITI+Exclusive+Your+Mountain+Suite/@46.4429953,11.6062758,13z/",
+                memos: ["바욜렛 산장으로 올라가는 마지막 코스는 바위가 거칠어 접지력 좋은 트레킹화 필수"],
+                timeline: [
+                    { time: "09:00", desc: "숙소에서 출발하여 Vigo di Fassa 케이블카역 이동" },
+                    { time: "09:30", desc: "① Funivia Vigo-Catinaccio 탑승 및 ② Ciampedie 도착" },
+                    { time: "10:00", desc: "③ Rifugio Ciampedie에서 트레킹 개시" },
+                    { time: "11:00", desc: "④ Rifugio Gardeccia 도착 (완만한 숲길 코스)" },
+                    { time: "12:30", desc: "⑤ Rifugio Vajolet (바욜렛 산장, 2,243m) 도착 및 거대한 암봉 감상" },
+                    { time: "13:30", desc: "산장 부근에서 하이커 전용 점심식사" },
+                    { time: "14:30", desc: "원점 회귀 방향으로 안전 하산 시작" },
+                    { time: "16:30", desc: "Vigo-Catinaccio 역 도착 후 숙소 복귀 및 휴식" }
+                ],
+                lifts: [
+                    { name: "카티나치오 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" }
+                ]
+            },
+            {
+                day: 6,
+                date: "2026.07.16 (목)",
+                title: "카레자호수 & 아우구스트 트레일 콤보",
+                hotel: "DOLPMITI Exclusive Your Mountain Suite",
+                lunch: "Rifugio Friedrich August (알프스식 홈메이드 파스타와 맥주)",
+                routeUrl: "https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Lago+di+Carezza/Seggiovia+Paolina/Campitello+di+Fassa/Rifugio+Sasso+Piatto/DOLOMITI+Exclusive+Your+Mountain+Suite/@46.4716942,11.5312389,12z/",
+                memos: ["하루에 호수-트레일 두 곳을 묶는 날이므로 일찍 움직여야 여유로움", "사쏘피아토 산장에서 바라보는 들판의 평화로운 경치가 일품"],
+                timeline: [
+                    { time: "09:00", desc: "숙소 출발 -> 카레자호수 주차장으로 이동" },
+                    { time: "09:30", desc: "① Lago di Carezza (에메랄드빛 무지개 호수) 산책" },
+                    { time: "10:30", desc: "② Seggiovia Paolina 주차 및 리프트 탑승" },
+                    { time: "11:00", desc: "③ Paolina 산장에서 ④ 독수리 동상(Christomannos) 경유 ⑤ Rifugio VAEL" },
+                    { time: "12:30", desc: "리프트 탑승장 복귀 후 Campitello di Fassa 이동" },
+                    { time: "13:15", desc: "⑥ Col Rodella 케이블카 주차장 주차 및 탑승" },
+                    { time: "13:30", desc: "⑦ Rifugio Des Alpes에서 아우구스트 트레일 시작" },
+                    { time: "14:00", desc: "⑧ 야크 동상(The Yak Place) 및 ⑨ Rifugio Friedrich August" },
+                    { time: "15:00", desc: "⑩ Rifugio Sandro Pertini -> ⑪ Rifugio Sasso Piatto 하이킹" },
+                    { time: "17:30", desc: "역방향으로 원점 회귀 후 케이블카 하강 및 숙소 복귀" }
+                ],
+                lifts: [
+                    { name: "카레자 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/summer/carezza" }
+                ]
+            },
+            {
+                day: 7,
+                date: "2026.07.17 (금)",
+                title: "피츠보에 절경 & 사쏘룽고 & QC 떼르메 스파",
+                hotel: "DOLPMITI Exclusive Your Mountain Suite",
+                lunch: "In Sella 레스토랑 (전망이 훌륭한 테라스에서 피자 추천)",
+                routeUrl: "https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Passo+Pordoi/Passo+Sella/QC+Terme+Dolomiti/DOLOMITI+Exclusive+Your+Mountain+Suite/@46.4526615,11.6669931,12z/",
+                memos: ["사쏘룽고 2인승 노란색 스탠딩 곤돌라는 독특한 경험!", "저녁 QC 떼르메 온천 예약 시간 사전 체크 필수"],
+                timeline: [
+                    { time: "09:00", desc: "숙소 출발 -> Passo Pordoi 주차장 이동" },
+                    { time: "09:30", desc: "① 주차 후 Sass Pordoi 케이블카 타고 달표면 같은 피츠보에 감상" },
+                    { time: "10:30", desc: "② Terrazza delle Dolomiti 및 Rifugio Forcella Pordoi 길목 탐방" },
+                    { time: "11:30", desc: "Passo Sella로 이동하여 ③ Parking Sella 주차" },
+                    { time: "12:00", desc: "☕ In Sella 카페에서 웅장한 사소룽고를 보며 커피 한잔 & 점심식사" },
+                    { time: "13:15", desc: "④ Telecabine Gondelbahn Forcella del Sassolungo 2인 곤돌라 탑승" },
+                    { time: "13:40", desc: "⑤ Rifugio Toni Demetz 산장 주변 풍경 조망 후 역방향 하강" },
+                    { time: "15:30", desc: "숙소로 컴백하여 가벼운 정비 및 휴식" },
+                    { time: "18:00", desc: "♨️ QC Terme Dolomiti 온천에서 피로 회복 (환상적인 야외 스파)" }
+                ],
+                lifts: [
+                    { name: "파사/포르도이 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/val-di-fassa-carezza" },
+                    { name: "사쏘룽고 곤돌라 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" }
+                ]
+            },
+            {
+                day: 8,
+                date: "2026.07.18 (토)",
+                title: "마르몰라다 전망대 & 비엘달판 트레킹",
+                hotel: "DOLPMITI Exclusive Your Mountain Suite",
+                lunch: "Rifugio Fredarola (페다이아 호수가 보이는 야외 테라스 파스타 맛집)",
+                routeUrl: "https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Marmolada+Cable+Car,+Rocca+Pietore/Alba/Col+dei+Rossi/Rifugio+Viel+dal+Pan/DOLOMITI+Exclusive+Your+Mountain+Suite/@46.4348589,11.7582522,12z/",
+                memos: ["마르몰라다 정상(Punta Rocca)은 해발 3,265m로 무척 추우니 겨울 외투 지참 필수"],
+                timeline: [
+                    { time: "09:00", desc: "숙소 출발 -> Malga Ciapela 마르몰라다 주차장 이동" },
+                    { time: "09:40", desc: "① 케이블카 연속 탑승하여 최고봉 Punta Rocca(빙하 전망대) 도달" },
+                    { time: "10:30", desc: "② Serauta 박물관 및 Terrazza Marmolada 탐방 후 하산" },
+                    { time: "11:45", desc: "Alba 마을 이동 및 Parcheggio Funivia Doleda 주차" },
+                    { time: "12:00", desc: "③ 130번 케이블카로 Col dei Rossi 탑승" },
+                    { time: "12:30", desc: "④ Chalet Belvedere -> ⑤ Rifugio Fredarola 이동 및 경치 감상하며 점심식사" },
+                    { time: "13:45", desc: "⑥ Viel dal Pan 길을 따라 마르몰라다 빙하와 페다이아 호수 조망" },
+                    { time: "14:45", desc: "⑦ Rifugio Viel Del Pan 산장 반환점 터치 후 역순 컴백" },
+                    { time: "17:00", desc: "🚗 알바 주차장에서 숙소로 복귀" }
+                ],
+                lifts: [
+                    { name: "발디파사 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/val-di-fassa-carezza" },
+                    { name: "아라바/마르몰라다 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/arabba-marmolada" }
+                ]
+            },
+            {
+                day: 9,
+                date: "2026.07.19 (일)",
+                title: "프랄롱기아 & 아르멘타라 예비 트레킹",
+                hotel: "DOLPMITI Exclusive Your Mountain Suite",
+                lunch: "Rifugio Bioch (전통 보리 수프와 이탈리안 라비올리 추천)",
+                routeUrl: "https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Corvara/Pralongi%C3%A0/La+Crusc/DOLOMITI+Exclusive+Your+Mountain+Suite/@46.5168019,11.7587844,11z/",
+                memos: ["아르멘타라 예비일정은 체력 상태에 맞게 진행 선택", "야생화 초원지대 길을 걸을 땐 카메라 충전 필수"],
+                timeline: [
+                    { time: "08:00", desc: "숙소 출발 -> 코르바라 Cabinovia Col Alt 주차" },
+                    { time: "09:00", desc: "① Col Alt 곤돌라 탑승하여 올라가기" },
+                    { time: "09:30", desc: "② Piz Arlara 포토포인트 통과 -> ③ Rifugio Bioch 도착" },
+                    { time: "10:30", desc: "④ Rifugio Pralongia (평화롭고 완만한 고원지대 산장)" },
+                    { time: "12:00", desc: "원점 회귀하여 코르바라 마을에서 점심식사" },
+                    { time: "13:00", desc: "[예비일정] Badia 마을 Parcheggio La Crusc 이동 및 주차" },
+                    { time: "13:30", desc: "⑤ Sessellift La Crusc 타고 올라가 산타크로체 성당 방문" },
+                    { time: "14:30", desc: "⑥ 15번 야생화 길을 따라 Crist de Armentara 초원 하이킹" },
+                    { time: "15:30", desc: "⑦ Ranch da Andre 산장 휴식 후 7A길로 바디아 원점 복귀" },
+                    { time: "17:30", desc: "🚗 숙소 DOLPMITI Exclusive 복귀 후 편안한 휴식" }
+                ],
+                lifts: [
+                    { name: "알타바디아 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/alta-badia" }
+                ]
+            },
+            {
+                day: 10,
+                date: "2026.07.20 (월)",
+                title: "라스치에사 & 단체르체피스 가르데나패스",
+                hotel: "DOLPMITI Exclusive Your Mountain Suite",
+                lunch: "Dantercepies Mountain Lounge (파노라마 뷰를 즐기며 카프레제 샐러드와 파스타)",
+                routeUrl: "https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Parkgarage+Seceda/Rasciesa/Dantercepies/DOLOMITI+Exclusive+Your+Mountain+Suite/@46.5456424,11.5034177,11z/",
+                memos: ["라스치에사 푸니쿨라레는 레일바이크식 기차로 탑승감이 안락함", "단체르체피스 뷰포인트는 돌로미티 전체에서 가장 이국적인 경관 중 하나"],
+                timeline: [
+                    { time: "08:00", desc: "숙소 출발 -> Ortisei Parkgarage Seceda 주차" },
+                    { time: "08:50", desc: "① 도보로 Funicolare Resciesa 기차역 이동 및 탑승" },
+                    { time: "09:10", desc: "② Chalet Resciesa -> ③ Rifugio Resciesa 하이킹" },
+                    { time: "10:00", desc: "④ Cappella Santa Croce 교구 성당 크게 돌며 여유로운 산책" },
+                    { time: "11:30", desc: "푸니쿨라레 타고 내려와 주차장 복귀" },
+                    { time: "12:15", desc: "Selva 마을 Parcheggio coperto Dantercepies 이동 및 주차" },
+                    { time: "12:30", desc: "⑤ Cabinovia Dantercepies 탑승 및 산정 도착" },
+                    { time: "13:00", desc: "☕ Dantercepies Mountain Lounge에서 웅장한 가르데나패스 보며 점심 & 음료" },
+                    { time: "15:00", desc: "역방향 하산 후 아기자기하고 아름다운 셀바 마을 상점가 구경" },
+                    { time: "17:00", desc: "🚗 숙소 복귀 및 마지막 밤 짐 정리" }
+                ],
+                lifts: [
+                    { name: "세체다/가르데나 리프트 정보", url: "https://www.dolomitisuperski.com/en/live-info/lifts/groden-seiser-alm" }
+                ]
+            },
+            {
+                day: 11,
+                date: "2026.07.21 (화)",
+                title: "볼차노 도시 관광 및 밀라노 복귀",
+                hotel: "쉐라톤 밀란 말펜사 에어포트 호텔 & 컨퍼런스센터",
+                lunch: "볼차노 Waltherplatz 야외 테라스 맛집 (피자 및 카프레제)",
+                routeUrl: "https://www.google.com/maps/dir/DOLOMITI+Exclusive+Your+Mountain+Suite/Bolzano/Eni+Station,+Fernno/Sheraton+Milan+Malpensa+Airport+Hotel+%26+Conference+Centre/@45.9229093,9.5855799,8z/",
+                memos: ["볼차노 Walther Square Parking 또는 Parking Bolzano Centro 주차장 이용", "렌트카 반납 전 Eni Station Malpensa 주유소에서 풀 주유 필수!", "오후 5시 전까지 렌트카 무사 반납"],
+                timeline: [
+                    { time: "08:00", desc: "체크아웃 후 숙소 출발 -> 볼차노 이동" },
+                    { time: "09:15", desc: "① 볼차노 주차장 주차 및 발터 광장(Waltherplatz) 도보 이동" },
+                    { time: "09:30", desc: "② 볼차노 대성당 관람 및 활기찬 아침 시장 구경" },
+                    { time: "11:00", desc: "③ Weekend Max Mara 쇼핑 및 ④ 넵튠 분수대 산책" },
+                    { time: "12:00", desc: "광장 카페에서 이탈리아 전통 피자와 파스타 점심식사" },
+                    { time: "13:00", desc: "🚗 밀라노 말펜사 공항을 향해 고속도로 출발" },
+                    { time: "16:15", desc: "공항 근처 Eni Station에서 가득 주유" },
+                    { time: "16:45", desc: "말펜사 공항 렌트카 주차장에 차량 완벽 반납" },
+                    { time: "17:30", desc: "🏨 쉐라톤 말펜사 호텔 체크인 및 휴식" }
+                ],
+                lifts: []
+            },
+            {
+                day: 12,
+                date: "2026.07.22 (수) - 07.23 (목)",
+                title: "밀라노 출발 및 인천 무사 도착",
+                hotel: "기내 숙박",
+                lunch: "파리 CDG 공항 환승 중 프렌치 베이커리 브런치 추천",
+                routeUrl: "https://www.google.com/maps/dir/Milan+Malpensa+Airport+(MXP),+Fernno,+VA,+Italy/Incheon+International+Airport+(ICN),+Gonghang-ro,+Jung-gu,+Incheon/@47.4578051,19.3496669,4z/",
+                memos: ["밀라노 말펜사 새벽 6시 45분 AF1131 탑승하므로 오전 4시 30분 카운터 오픈 대기 권장", "파리 CDG 2F 도착 후 2E 터미널 환승 길 주의 요망"],
+                timeline: [
+                    { time: "04:30", desc: "쉐라톤 퇴실 및 에어프랑스 탑승수속 대기" },
+                    { time: "06:45", desc: "밀라노 말펜사 출발 ✈️ 파리 CDG 행 비행 (AF1131)" },
+                    { time: "08:20", desc: "파리 샤를드골 공항 2F 터미널 도착 후 환승 구역 이동" },
+                    { time: "14:40", desc: "파리 CDG 2E 터미널 출발 ✈️ 인천공항 행 탑승 (AF0264)" },
+                    { time: "09:35", desc: "★ (7.23일 오전) 인천공항 제2여객터미널 도착 및 집으로 귀가" }
+                ],
+                lifts: []
             }
+        ];
+
+        // Global State (Using In-memory first, but allows state persistence per session)
+        let customMemos = JSON.parse(localStorage.getItem('dolomiti_memos')) || {};
+        let checklist = JSON.parse(localStorage.getItem('dolomiti_checklist')) || defaultChecklist;
+        let budgets = JSON.parse(localStorage.getItem('dolomiti_budgets')) || defaultBudgets;
+
+        // Save State helper
+        function saveState() {
+            localStorage.setItem('dolomiti_memos', JSON.stringify(customMemos));
+            localStorage.setItem('dolomiti_checklist', JSON.stringify(checklist));
+            localStorage.setItem('dolomiti_budgets', JSON.stringify(budgets));
         }
 
-        // Save data to LocalStorage
-        function saveStateToStorage() {
-            localStorage.setItem('dolomiti_travel_state', JSON.stringify(state));
-        }
-
-        // Initialize App on DOM Ready
-        window.addEventListener('DOMContentLoaded', () => {
-            loadState();
-            lucide.createIcons();
-            
-            // Populating Memos to Textareas
-            for (let day = 1; day <= 12; day++) {
-                const textarea = document.getElementById(`memo-${day}`);
-                if (textarea) {
-                    textarea.value = state.memos[day] || "";
-                }
-            }
-
-            // Expand first day by default
-            toggleDay(1);
-            
-            // Render checklists & budget
-            renderTodoList();
+        // Render functions
+        function initApp() {
+            renderItinerary();
+            renderChecklist();
             renderBudget();
-        });
+        }
 
-        // Accordion toggle for Days
-        function toggleDay(dayNum) {
-            const content = document.getElementById(`content-${dayNum}`);
-            const arrow = document.getElementById(`arrow-${dayNum}`);
-            
-            if (content.classList.contains('hidden')) {
-                // Open selected
-                content.classList.remove('hidden');
-                arrow.classList.add('rotate-180');
+        // 1. Itinerary Screen Renderer
+        function renderItinerary() {
+            const container = document.getElementById('days-container');
+            container.innerHTML = '';
+
+            travelData.forEach((dayData, index) => {
+                // Combine original memos and custom added memos
+                const mergedMemos = [...dayData.memos, ...(customMemos[index] || [])];
+                
+                const dayCard = document.createElement('div');
+                dayCard.className = "bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300";
+                
+                let liftButtonsHtml = '';
+                if(dayData.lifts.length > 0) {
+                    dayData.lifts.forEach(lift => {
+                        liftButtonsHtml += `
+                            <a href="${lift.url}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-xl text-xs font-bold transition-all mt-2 mr-2 border border-blue-100">
+                                <i class="fa-solid fa-circle-info"></i> ${lift.name} 실시간 운행정보 ↗
+                            </a>
+                        `;
+                    });
+                }
+
+                let memosHtml = '';
+                mergedMemos.forEach((memo, mIdx) => {
+                    memosHtml += `
+                        <div class="flex items-start justify-between bg-amber-50/50 p-2.5 rounded-xl text-xs text-amber-900 border border-amber-100/40 gap-2">
+                            <span class="flex-1 leading-relaxed"><i class="fa-solid fa-thumbtack text-amber-500 mr-1.5"></i>${memo}</span>
+                            <div class="flex gap-1.5">
+                                <button onclick="openMemoModalForEdit(${index}, ${mIdx}, '${memo.replace(/'/g, "\\'")}')" class="text-blue-500 hover:text-blue-700 text-[10px]"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteDayMemo(${index}, ${mIdx})" class="text-rose-500 hover:text-rose-700 text-[10px]"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                let timelineHtml = '';
+                dayData.timeline.forEach((item, tIdx) => {
+                    const isLast = tIdx === dayData.timeline.length - 1;
+                    timelineHtml += `
+                        <div class="flex gap-3 relative text-xs">
+                            ${!isLast ? '<div class="absolute left-[13px] top-[14px] bottom-[-16px] w-[1px] bg-slate-200"></div>' : ''}
+                            <span class="font-bold text-blue-500 w-10 text-right shrink-0 pt-0.5">${item.time}</span>
+                            <div class="w-2.5 h-2.5 rounded-full bg-teal-400 mt-[5px] shrink-0 outline outline-4 outline-teal-50"></div>
+                            <span class="text-slate-600 leading-relaxed pb-4 flex-1">${item.desc}</span>
+                        </div>
+                    `;
+                });
+
+                dayCard.innerHTML = `
+                    <!-- Accordion Header -->
+                    <div class="p-4 flex justify-between items-center cursor-pointer bg-gradient-to-r from-slate-50 to-white hover:from-blue-50/20" onclick="toggleAccordion('day-content-${index}')">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="bg-blue-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md">DAY ${dayData.day}</span>
+                                <span class="text-[11px] text-slate-400 font-bold">${dayData.date}</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm">${dayData.title}</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300" id="icon-day-content-${index}"></i>
+                    </div>
+
+                    <!-- Accordion Body (Initially hidden except DAY 2 for preview) -->
+                    <div id="day-content-${index}" class="border-t border-slate-50 p-4 space-y-4 ${index === 1 ? '' : 'hidden'}">
+                        <!-- Key Information -->
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-blue-50/50 p-2.5 rounded-xl border border-blue-100/30">
+                                <p class="text-[10px] text-slate-400 font-bold mb-0.5"><i class="fa-solid fa-hotel text-blue-500"></i> 숙박지</p>
+                                <p class="font-bold text-slate-700 leading-tight">${dayData.hotel}</p>
+                            </div>
+                            <div class="bg-teal-50/50 p-2.5 rounded-xl border border-teal-100/30">
+                                <p class="text-[10px] text-slate-400 font-bold mb-0.5"><i class="fa-solid fa-utensils text-teal-400"></i> 추천 점심</p>
+                                <p class="font-bold text-slate-700 leading-tight">${dayData.lunch}</p>
+                            </div>
+                        </div>
+
+                        <!-- Lifts Real-time Information Link -->
+                        ${liftButtonsHtml ? `<div>${liftButtonsHtml}</div>` : ''}
+
+                        <!-- Google Map Path button -->
+                        <div>
+                            <a href="${dayData.routeUrl}" target="_blank" class="w-full flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-xl text-xs font-bold transition-all shadow-sm">
+                                <i class="fa-solid fa-map-location-dot text-emerald-400"></i> 전체 구글 지도 경로 확인 (동선 순서 기준) ↗
+                            </a>
+                        </div>
+
+                        <!-- Memos Block -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-800"><i class="fa-solid fa-note-sticky text-amber-500"></i> 오늘의 알림 & 자유 메모</span>
+                                <button onclick="openMemoModal(${index})" class="text-[11px] text-blue-500 font-bold flex items-center gap-0.5 hover:underline">
+                                    <i class="fa-solid fa-plus-circle"></i> 새 메모 추가
+                                </button>
+                            </div>
+                            <div class="space-y-1.5">
+                                ${memosHtml || '<p class="text-xs text-slate-400 py-2 text-center">등록된 메모가 없습니다.</p>'}
+                            </div>
+                        </div>
+
+                        <!-- Timeline Sequence -->
+                        <div class="pt-2">
+                            <p class="text-xs font-bold text-slate-800 mb-3"><i class="fa-solid fa-clock-rotate-left text-teal-400"></i> 타임라인 일정순서 (동선 번호 포함)</p>
+                            <div class="pl-2">
+                                ${timelineHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(dayCard);
+            });
+        }
+
+        // Toggle Accordion function
+        function toggleAccordion(id) {
+            const target = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            if (target.classList.contains('hidden')) {
+                target.classList.remove('hidden');
+                icon.classList.add('rotate-180');
             } else {
-                // Close selected
-                content.classList.add('hidden');
-                arrow.classList.remove('rotate-180');
+                target.classList.add('hidden');
+                icon.classList.remove('rotate-180');
             }
         }
 
-        // Save Memos on blur
-        function saveMemo(dayNum) {
-            const textarea = document.getElementById(`memo-${dayNum}`);
-            state.memos[dayNum] = textarea.value;
-            saveStateToStorage();
-        }
+        // Switching Active Page
+        function switchPage(pageName) {
+            document.querySelectorAll('.app-page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(`page-${pageName}`).classList.remove('hidden');
 
-        // Nav Tab Switching Logic
-        function switchTab(tabId) {
-            // Hide all contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            
-            // Reset tab icons styles
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('text-emerald-700');
-                btn.classList.add('text-slate-400');
+            // Button styling reset and update
+            const navButtons = {
+                itinerary: document.getElementById('btn-itinerary'),
+                checklist: document.getElementById('btn-checklist'),
+                budget: document.getElementById('btn-budget')
+            };
+
+            Object.keys(navButtons).forEach(key => {
+                const btn = navButtons[key];
+                if (key === pageName) {
+                    btn.classList.add('text-blue-500', 'font-bold');
+                    btn.classList.remove('text-slate-400', 'font-medium');
+                } else {
+                    btn.classList.remove('text-blue-500', 'font-bold');
+                    btn.classList.add('text-slate-400', 'font-medium');
+                }
             });
 
-            // Show current active tab content
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            
-            // Highlight current navigation icon
-            document.getElementById(`nav-${tabId}`).classList.add('text-emerald-700');
-            document.getElementById(`nav-${tabId}`).classList.remove('text-slate-400');
-            
+            // Auto scroll to top of page when navigating
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // [Checklist functions]
-        function renderTodoList() {
-            const todoList = document.getElementById('todo-list');
-            todoList.innerHTML = '';
+        // 2. Checklist Screen Logic
+        const checklistForm = document.getElementById('checklist-form');
+        const checklistInput = document.getElementById('checklist-input');
+        const checklistUl = document.getElementById('checklist-ul');
+
+        checklistForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const text = checklistInput.value.trim();
+            if(!text) return;
             
-            let completedCount = 0;
-
-            state.todos.forEach(todo => {
-                if (todo.completed) completedCount++;
-
-                const item = document.createElement('div');
-                item.className = `flex items-center justify-between p-3 rounded-xl border ${todo.completed ? 'bg-slate-50/70 border-slate-200' : 'bg-white border-slate-100'} shadow-sm transition`;
-                item.innerHTML = `
-                    <div class="flex items-center gap-3 flex-1 cursor-pointer" onclick="toggleTodo(${todo.id})">
-                        <span class="w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${todo.completed ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-300'}">
-                            ${todo.completed ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : ''}
-                        </span>
-                        <span class="text-xs font-medium ${todo.completed ? 'line-through text-slate-400' : 'text-slate-700'}">${todo.text}</span>
-                    </div>
-                    <button onclick="deleteTodo(${todo.id})" class="text-slate-400 hover:text-red-500 p-1 transition">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                `;
-                todoList.appendChild(item);
-            });
-
-            document.getElementById('checklist-counter').innerText = `${completedCount} / ${state.todos.length}`;
-            lucide.createIcons();
-        }
-
-        function addTodoItem() {
-            const input = document.getElementById('new-todo-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const newItem = {
+            checklist.push({
                 id: Date.now(),
                 text: text,
-                completed: false
-            };
-
-            state.todos.push(newItem);
-            saveStateToStorage();
-            renderTodoList();
-            input.value = '';
-        }
-
-        function toggleTodo(id) {
-            state.todos = state.todos.map(todo => {
-                if (todo.id === id) {
-                    return { ...todo, completed: !todo.completed };
-                }
-                return todo;
+                done: false
             });
-            saveStateToStorage();
-            renderTodoList();
-        }
+            checklistInput.value = '';
+            saveState();
+            renderChecklist();
+        });
 
-        function deleteTodo(id) {
-            state.todos = state.todos.filter(todo => todo.id !== id);
-            saveStateToStorage();
-            renderTodoList();
-        }
+        function renderChecklist() {
+            checklistUl.innerHTML = '';
+            if(checklist.length === 0) {
+                checklistUl.innerHTML = '<li class="text-xs text-slate-400 py-4 text-center">체크리스트가 비어있습니다.</li>';
+                document.getElementById('checklist-progress').innerText = "진행도: 0/0 (0%)";
+                return;
+            }
 
-        // [Budget functions]
-        function renderBudget() {
-            const budgetList = document.getElementById('budget-list');
-            budgetList.innerHTML = '';
-            
-            let totalKRW = 0;
-
-            state.budget.forEach(item => {
-                const isEUR = item.currency === 'EUR';
-                const valueInEUR = isEUR ? item.amount : item.amount / EXC_RATE;
-                const valueInKRW = isEUR ? item.amount * EXC_RATE : item.amount;
-                
-                totalKRW += valueInKRW;
-
-                const card = document.createElement('div');
-                card.className = "bg-white border border-slate-100 p-3 rounded-xl flex justify-between items-center shadow-sm";
-                card.innerHTML = `
-                    <div>
-                        <p class="text-xs font-bold text-slate-800">${item.title}</p>
-                        <p class="text-[10px] text-slate-400">
-                            ${isEUR ? `€${item.amount.toLocaleString()}` : `₩${item.amount.toLocaleString()}`} 
-                            <span class="mx-1 text-slate-300">|</span> 
-                            상호환산: ${isEUR ? `₩${Math.round(valueInKRW).toLocaleString()}` : `€${(Math.round(valueInEUR * 100)/100).toFixed(2)}`}
-                        </p>
+            let completedCount = 0;
+            checklist.forEach(item => {
+                if(item.done) completedCount++;
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center py-2.5 first:pt-0";
+                li.innerHTML = `
+                    <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="toggleChecklistDone(${item.id})">
+                        <i class="fa-regular ${item.done ? 'fa-circle-check text-teal-400' : 'fa-circle text-slate-300'} text-lg"></i>
+                        <span class="text-xs ${item.done ? 'line-through text-slate-400 font-normal' : 'text-slate-700 font-medium'} leading-relaxed">${item.text}</span>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-extrabold text-slate-700">
-                            ${isEUR ? `€${item.amount.toLocaleString()}` : `₩${item.amount.toLocaleString()}`}
-                        </span>
-                        <button onclick="deleteBudget(${item.id})" class="text-slate-400 hover:text-red-500 p-1">
-                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                        </button>
-                    </div>
+                    <button onclick="deleteChecklistItem(${item.id})" class="text-rose-400 hover:text-rose-600 px-1 py-1 text-xs transition-all"><i class="fa-solid fa-trash-can"></i></button>
                 `;
-                budgetList.appendChild(card);
+                checklistUl.appendChild(li);
             });
 
-            const totalEUR = totalKRW / EXC_RATE;
-            document.getElementById('total-krw').innerText = `₩${Math.round(totalKRW).toLocaleString()}`;
-            document.getElementById('total-eur').innerText = `€${totalEUR.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            
-            lucide.createIcons();
+            const percent = Math.round((completedCount / checklist.length) * 100);
+            document.getElementById('checklist-progress').innerText = `진행도: ${completedCount}/${checklist.length}개 (${percent}%)`;
         }
 
-        function addBudgetItem() {
-            const titleInput = document.getElementById('budget-title');
-            const amountInput = document.getElementById('budget-amount');
-            const currencySelect = document.getElementById('budget-currency');
+        function toggleChecklistDone(id) {
+            checklist = checklist.map(item => item.id === id ? { ...item, done: !item.done } : item);
+            saveState();
+            renderChecklist();
+        }
 
-            const title = titleInput.value.trim();
-            const amount = parseFloat(amountInput.value);
-            const currency = currencySelect.value;
+        function deleteChecklistItem(id) {
+            checklist = checklist.filter(item => item.id !== id);
+            saveState();
+            renderChecklist();
+        }
 
-            if (!title || isNaN(amount) || amount <= 0) return;
+        function clearCompletedChecklist() {
+            checklist = checklist.filter(item => !item.done);
+            saveState();
+            renderChecklist();
+        }
 
-            const newItem = {
+        // 3. Budget Screen Logic
+        const budgetForm = document.getElementById('budget-form');
+        const budgetTitleInput = document.getElementById('budget-title');
+        const budgetCategorySelect = document.getElementById('budget-category');
+        const budgetAmountInput = document.getElementById('budget-amount');
+        const budgetCurrencySelect = document.getElementById('budget-currency');
+        const budgetTbody = document.getElementById('budget-tbody');
+
+        budgetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = budgetTitleInput.value.trim();
+            const category = budgetCategorySelect.value;
+            const amount = parseFloat(budgetAmountInput.value);
+            const currency = budgetCurrencySelect.value;
+
+            if(!title || isNaN(amount)) return;
+
+            budgets.push({
                 id: Date.now(),
                 title: title,
+                category: category,
                 amount: amount,
                 currency: currency
-            };
+            });
 
-            state.budget.push(newItem);
-            saveStateToStorage();
+            // Reset Form Inputs
+            budgetTitleInput.value = '';
+            budgetAmountInput.value = '';
+            saveState();
             renderBudget();
+        });
 
-            // Clear inputs
-            titleInput.value = '';
-            amountInput.value = '';
+        function renderBudget() {
+            budgetTbody.innerHTML = '';
+            let totalKrwVal = 0;
+            let totalEurVal = 0;
+
+            budgets.forEach(item => {
+                let krwAmount = 0;
+                let eurAmount = 0;
+
+                if (item.currency === 'EUR') {
+                    eurAmount = item.amount;
+                    krwAmount = item.amount * EXCHANGE_RATE;
+                } else {
+                    krwAmount = item.amount;
+                    eurAmount = item.amount / EXCHANGE_RATE;
+                }
+
+                totalKrwVal += krwAmount;
+                totalEurVal += eurAmount;
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-50 hover:bg-slate-50/50";
+                tr.innerHTML = `
+                    <td class="py-2.5 font-medium text-slate-500">${item.category}</td>
+                    <td class="py-2.5 font-bold text-slate-800">${item.title}</td>
+                    <td class="py-2.5 text-right font-medium text-slate-700">${item.currency === 'EUR' ? '€' : '₩'}${item.amount.toLocaleString()}</td>
+                    <td class="py-2.5 text-right text-emerald-600 font-bold">₩${Math.round(krwAmount).toLocaleString()}</td>
+                    <td class="py-2.5 text-center">
+                        <button onclick="deleteBudget(${item.id})" class="text-rose-400 hover:text-rose-600 text-xs px-1.5 py-0.5"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                budgetTbody.appendChild(tr);
+            });
+
+            document.getElementById('total-krw').innerText = `${Math.round(totalKrwVal).toLocaleString()} 원`;
+            document.getElementById('total-eur').innerText = `€ ${Math.round(totalEurVal).toLocaleString()}`;
         }
 
         function deleteBudget(id) {
-            state.budget = state.budget.filter(item => item.id !== id);
-            saveStateToStorage();
+            budgets = budgets.filter(item => item.id !== id);
+            saveState();
             renderBudget();
         }
+
+        // 4. Memos Modal Logic
+        const memoModal = document.getElementById('memo-modal');
+        const memoModalTitle = document.getElementById('memo-modal-title');
+        const memoDayIndex = document.getElementById('memo-day-index');
+        const memoItemIndex = document.getElementById('memo-item-index');
+        const memoTextarea = document.getElementById('memo-textarea');
+        const btnMemoDelete = document.getElementById('btn-memo-delete');
+
+        function openMemoModal(dayIdx) {
+            memoModalTitle.innerText = `DAY ${dayIdx + 1} 메모 추가`;
+            memoDayIndex.value = dayIdx;
+            memoItemIndex.value = -1; // -1 means adding new
+            memoTextarea.value = '';
+            btnMemoDelete.classList.add('hidden');
+            memoModal.classList.remove('hidden');
+        }
+
+        function openMemoModalForEdit(dayIdx, mIdx, memoText) {
+            memoModalTitle.innerText = `DAY ${dayIdx + 1} 메모 수정`;
+            memoDayIndex.value = dayIdx;
+            memoItemIndex.value = mIdx;
+            memoTextarea.value = memoText;
+            btnMemoDelete.classList.remove('hidden');
+            memoModal.classList.remove('hidden');
+        }
+
+        function closeMemoModal() {
+            memoModal.classList.add('hidden');
+        }
+
+        function saveMemo() {
+            const dayIdx = parseInt(memoDayIndex.value);
+            const mIdx = parseInt(memoItemIndex.value);
+            const text = memoTextarea.value.trim();
+
+            if(!text) return;
+
+            if(!customMemos[dayIdx]) {
+                customMemos[dayIdx] = [];
+            }
+
+            if(mIdx === -1) {
+                // Add new memo
+                customMemos[dayIdx].push(text);
+            } else {
+                // Edit existing custom memo
+                // Note: In travelData there are static memos, we handle custom ones separately or allow editing custom ones
+                customMemos[dayIdx][mIdx] = text;
+            }
+
+            saveState();
+            renderItinerary();
+            closeMemoModal();
+        }
+
+        function deleteMemo() {
+            const dayIdx = parseInt(memoDayIndex.value);
+            const mIdx = parseInt(memoItemIndex.value);
+            if(dayIdx >= 0 && mIdx >= 0) {
+                customMemos[dayIdx].splice(mIdx, 1);
+                saveState();
+                renderItinerary();
+                closeMemoModal();
+            }
+        }
+
+        // Direct delete of day custom memo
+        function deleteDayMemo(dayIdx, mIdx) {
+            // First check if it is part of static memos or custom memos
+            const staticLength = travelData[dayIdx].memos.length;
+            if (mIdx < staticLength) {
+                // If trying to delete pre-written static memos, we can save a copy to customMemos and hide it
+                // For simplicity, we warn that static memos can't be deleted but can be overwritten. 
+                // However, let's treat all memos smoothly:
+                const confirmRes = confirm("일정 기본 알림 메모를 삭제하시겠습니까?");
+                if(confirmRes) {
+                    travelData[dayIdx].memos.splice(mIdx, 1);
+                    renderItinerary();
+                }
+            } else {
+                // Delete custom memo
+                const customIdx = mIdx - staticLength;
+                customMemos[dayIdx].splice(customIdx, 1);
+                saveState();
+                renderItinerary();
+            }
+        }
+
+        // Run application on load
+        window.onload = function() {
+            initApp();
+        };
     </script>
 </body>
 </html>
